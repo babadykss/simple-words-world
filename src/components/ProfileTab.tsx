@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { User, Award, Twitter, FileText, Zap, Star, Moon, Check } from 'lucide-react';
+import { User, Award, Twitter, FileText, Check } from 'lucide-react';
+import { getUserUID } from '../utils/userUtils';
 
 interface ProfileTabProps {
   userBio?: string;
@@ -8,6 +9,7 @@ interface ProfileTabProps {
 
 const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
   const [showAllAchievements, setShowAllAchievements] = useState(false);
+  const userUID = getUserUID();
 
   // No achievements unlocked by default
   const achievements: any[] = [];
@@ -36,7 +38,7 @@ const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
         <div className="space-y-2">
           <div className="flex justify-between">
             <span className="text-green-400/70 text-xs">UID:</span>
-            <span className="text-green-400 text-xs font-mono">TT-4A7B9C2E</span>
+            <span className="text-green-400 text-xs font-mono">{userUID}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-green-400/70 text-xs">Nickname:</span>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import TerminalTabs from '../components/TerminalTabs';
 import ProfileTab from '../components/ProfileTab';
 import DashboardTab from '../components/DashboardTab';
@@ -9,6 +10,7 @@ import TerminalOutput from '../components/TerminalOutput';
 import TerminalInput from '../components/TerminalInput';
 import StatusBar from '../components/StatusBar';
 import { createCommands, executeCommand } from '../utils/terminalCommands';
+import { soundManager } from '../utils/soundUtils';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('terminal');
@@ -22,12 +24,19 @@ const Index = () => {
   const [showCoreMenu, setShowCoreMenu] = useState(false);
   const [userBio, setUserBio] = useState('');
   const [userTwitter, setUserTwitter] = useState('');
+  const [soundEnabled, setSoundEnabled] = useState(true);
+
+  useEffect(() => {
+    soundManager.setEnabled(soundEnabled);
+  }, [soundEnabled]);
 
   const commands = createCommands(setHistory, setActiveTab, setUserBio, setUserTwitter);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
+
+    soundManager.playCommand();
 
     const newHistory = [...history, `$ ${input}`];
     const [command, ...args] = input.split(' ');
@@ -36,12 +45,18 @@ const Index = () => {
     
     if (result !== null) {
       newHistory.push(result);
+      if (result.includes('Error') || result.includes('Unknown')) {
+        soundManager.playError();
+      } else {
+        soundManager.playSuccess();
+      }
     }
 
     setHistory(newHistory);
     setInput('');
     
     setIsProcessing(true);
+    soundManager.playProcessing();
     setTimeout(() => setIsProcessing(false), 500);
   };
 
@@ -52,7 +67,7 @@ const Index = () => {
       case 'dashboard':
         return <DashboardTab />;
       case 'settings':
-        return <SettingsTab />;
+        return <SettingsTab soundEnabled={soundEnabled} onSoundChange={setSoundEnabled} />;
       default:
         return (
           <>
@@ -61,6 +76,7 @@ const Index = () => {
               input={input}
               onInputChange={setInput}
               onSubmit={handleSubmit}
+              soundEnabled={soundEnabled}
             />
           </>
         );
