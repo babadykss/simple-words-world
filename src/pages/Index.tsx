@@ -12,23 +12,6 @@ import StatusBar from '../components/StatusBar';
 import { createCommands, executeCommand } from '../utils/terminalCommands';
 import { soundManager } from '../utils/soundUtils';
 
-// Declare global chrome types for extension environment
-declare global {
-  interface Window {
-    chrome?: {
-      runtime?: {
-        sendMessage: (message: any, callback: (response: any) => void) => void;
-        getURL: (path: string) => string;
-      };
-      storage?: {
-        local?: {
-          get: (keys: string[]) => Promise<any>;
-        };
-      };
-    };
-  }
-}
-
 const Index = () => {
   const [activeTab, setActiveTab] = useState('terminal');
   const [input, setInput] = useState('');
@@ -45,8 +28,8 @@ const Index = () => {
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        if (typeof window !== 'undefined' && window.chrome && window.chrome.storage) {
-          const result = await window.chrome.storage.local!.get(['userNickname']);
+        if (typeof window !== 'undefined' && (window as any).chrome && (window as any).chrome.storage) {
+          const result = await (window as any).chrome.storage.local.get(['userNickname']);
           const nickname = result.userNickname || '';
           setUserNickname(nickname);
           

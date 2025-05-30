@@ -45,7 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
           // Show success message
           showSuccess('Neural link established! Opening terminal...');
           
-          // Close welcome tab after delay
+          // Open extension popup instead of closing tab
+          setTimeout(() => {
+            chrome.action.openPopup();
+          }, 1000);
+          
+          // Close welcome tab after popup opens
           setTimeout(() => {
             if (chrome.tabs) {
               chrome.tabs.getCurrent((tab) => {
@@ -54,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
               });
             }
-          }, 1500);
+          }, 2000);
         } else {
           showError(response?.error || 'Neural link failed - try again');
           setLoadingState(false);
