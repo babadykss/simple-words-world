@@ -1,8 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, Zap, Code, Activity } from 'lucide-react';
+import TerminalTabs from '../components/TerminalTabs';
+import CryptoTab from '../components/CryptoTab';
+import DashboardTab from '../components/DashboardTab';
+import SettingsTab from '../components/SettingsTab';
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState('terminal');
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<string[]>([
     'Welcome to Titan Terminal v1.0.0',
@@ -13,12 +18,14 @@ const Index = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const commands = {
-    help: 'Available commands: help, clear, status, neural, scan, deploy',
+    help: 'Available commands: help, clear, status, neural, scan, deploy, crypto, dashboard',
     clear: () => setHistory([]),
     status: 'System: Online | Neural Core: Active | Memory: 2.4GB/4GB',
     neural: 'Neural network processing... [████████████] 100%',
     scan: 'Scanning network... Found 3 active nodes',
     deploy: 'Deploying to production... ✓ Success',
+    crypto: () => setActiveTab('crypto'),
+    dashboard: () => setActiveTab('dashboard'),
   };
 
   useEffect(() => {
@@ -50,6 +57,63 @@ const Index = () => {
     
     setIsProcessing(true);
     setTimeout(() => setIsProcessing(false), 500);
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'crypto':
+        return <CryptoTab />;
+      case 'dashboard':
+        return <DashboardTab />;
+      case 'settings':
+        return <SettingsTab />;
+      default:
+        return (
+          <>
+            {/* Terminal Output */}
+            <div 
+              ref={terminalRef}
+              className="flex-1 p-3 bg-black text-green-400 text-xs leading-relaxed overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-green-500/30"
+            >
+              {history.map((line, index) => (
+                <div key={index} className="mb-1">
+                  {line.startsWith('$') ? (
+                    <span className="text-green-300">{line}</span>
+                  ) : (
+                    <span className="text-green-400/80">{line}</span>
+                  )}
+                </div>
+              ))}
+              {isProcessing && (
+                <div className="flex items-center gap-2 text-green-300">
+                  <span>Processing</span>
+                  <div className="flex gap-1">
+                    <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                    <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Input Area */}
+            <div className="border-t border-green-500/30 bg-gray-900/30 p-3">
+              <form onSubmit={handleSubmit} className="flex items-center gap-2">
+                <Code className="w-4 h-4 text-green-400" />
+                <span className="text-green-400 text-sm">$</span>
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  className="flex-1 bg-transparent text-green-400 text-sm outline-none placeholder-green-400/50"
+                  placeholder="Enter command..."
+                  autoFocus
+                />
+              </form>
+            </div>
+          </>
+        );
+    }
   };
 
   return (
@@ -90,46 +154,12 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Terminal Output */}
-      <div 
-        ref={terminalRef}
-        className="flex-1 p-3 bg-black text-green-400 text-xs leading-relaxed overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-green-500/30"
-      >
-        {history.map((line, index) => (
-          <div key={index} className="mb-1">
-            {line.startsWith('$') ? (
-              <span className="text-green-300">{line}</span>
-            ) : (
-              <span className="text-green-400/80">{line}</span>
-            )}
-          </div>
-        ))}
-        {isProcessing && (
-          <div className="flex items-center gap-2 text-green-300">
-            <span>Processing</span>
-            <div className="flex gap-1">
-              <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce"></div>
-              <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-              <div className="w-1 h-1 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Tabs Navigation */}
+      <TerminalTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Input Area */}
-      <div className="border-t border-green-500/30 bg-gray-900/30 p-3">
-        <form onSubmit={handleSubmit} className="flex items-center gap-2">
-          <Code className="w-4 h-4 text-green-400" />
-          <span className="text-green-400 text-sm">$</span>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 bg-transparent text-green-400 text-sm outline-none placeholder-green-400/50"
-            placeholder="Enter command..."
-            autoFocus
-          />
-        </form>
+      {/* Content Area */}
+      <div className="flex-1 overflow-hidden flex flex-col">
+        {renderContent()}
       </div>
 
       {/* Status Bar */}
