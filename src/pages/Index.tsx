@@ -61,10 +61,10 @@ const Index = () => {
           newHistory.push(response);
         } else {
           result();
-          setHistory(newHistory);
-          setInput('');
-          return;
         }
+        setHistory(newHistory);
+        setInput('');
+        return;
       } else {
         newHistory.push(result);
       }
