@@ -17,7 +17,13 @@ export const createCommands = (
     },
     clear: {
       type: 'function',
-      value: () => setHistory([])
+      value: () => {
+        setHistory([
+          'Welcome to Titan Terminal v1.0.0',
+          'Neural network interface initialized...',
+          'Type "help" for available commands',
+        ]);
+      }
     },
     status: {
       type: 'string',
