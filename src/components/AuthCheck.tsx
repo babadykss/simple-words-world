@@ -5,6 +5,18 @@ interface AuthCheckProps {
   children: React.ReactNode;
 }
 
+// Declare global chrome types for extension environment
+declare global {
+  interface Window {
+    chrome?: {
+      runtime?: {
+        sendMessage: (message: any, callback: (response: any) => void) => void;
+        getURL: (path: string) => string;
+      };
+    };
+  }
+}
+
 const AuthCheck = ({ children }: AuthCheckProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
@@ -20,7 +32,7 @@ const AuthCheck = ({ children }: AuthCheckProps) => {
             setIsAuthenticated(true);
           } else {
             // Redirect to welcome page
-            window.location.href = chrome.runtime.getURL('welcome.html');
+            window.location.href = window.chrome.runtime.getURL('welcome.html');
           }
         } else {
           // Not in extension environment, allow access
