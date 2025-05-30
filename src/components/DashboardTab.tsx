@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Wallet, Image, Activity, Search, TrendingUp, TrendingDown } from 'lucide-react';
+import { Wallet, Image, Activity, Search, TrendingUp, TrendingDown, Wifi } from 'lucide-react';
 
 const DashboardTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -88,11 +88,11 @@ const DashboardTab = () => {
         </div>
       </div>
 
-      {/* Balances */}
+      {/* Real-time Data Feed */}
       <div>
         <div className="flex items-center gap-2 text-green-400 text-sm font-semibold mb-2">
-          <Wallet className="w-4 h-4" />
-          Portfolio Balance
+          <Wifi className="w-4 h-4" />
+          Real-time data feed active
         </div>
         <div className="space-y-2">
           {walletData.map((wallet) => (

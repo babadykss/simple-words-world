@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { User, Award, Twitter, FileText } from 'lucide-react';
+import { User, Award, Twitter, FileText, Zap, Star, Moon } from 'lucide-react';
 
 const ProfileTab = () => {
   const achievements = [
-    { name: 'First Transaction', date: '2024-01-15', icon: '🚀' },
-    { name: 'Crypto Explorer', date: '2024-02-20', icon: '🌟' },
-    { name: 'Dark Mode Lover', date: '2024-03-10', icon: '🌙' },
+    { name: 'First Transaction', date: '2024-01-15', icon: Zap },
+    { name: 'Crypto Explorer', date: '2024-02-20', icon: Star },
+    { name: 'Dark Mode Lover', date: '2024-03-10', icon: Moon },
   ];
 
   return (
@@ -36,17 +36,20 @@ const ProfileTab = () => {
           Achievements
         </div>
         <div className="space-y-2">
-          {achievements.map((achievement, index) => (
-            <div key={index} className="bg-gray-900/50 border border-green-500/20 rounded p-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">{achievement.icon}</span>
-                  <span className="text-green-400 text-xs">{achievement.name}</span>
+          {achievements.map((achievement, index) => {
+            const IconComponent = achievement.icon;
+            return (
+              <div key={index} className="bg-gray-900/50 border border-green-500/20 rounded p-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <IconComponent className="w-4 h-4 text-green-400" />
+                    <span className="text-green-400 text-xs">{achievement.name}</span>
+                  </div>
+                  <span className="text-green-400/70 text-xs">{achievement.date}</span>
                 </div>
-                <span className="text-green-400/70 text-xs">{achievement.date}</span>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
