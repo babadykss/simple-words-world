@@ -73,7 +73,7 @@ const Index = () => {
 
   const commands = createCommands(setHistory, setActiveTab, setUserBio, setUserTwitter, userNickname);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -82,22 +82,29 @@ const Index = () => {
     const newHistory = [...history, `$ ${input}`];
     const [command, ...args] = input.split(' ');
     
-    const result = executeCommand(command, args, commands);
+    setIsProcessing(true);
+    soundManager.playProcessing();
     
-    if (result !== null) {
-      newHistory.push(result);
-      if (result.includes('Error') || result.includes('Unknown')) {
-        soundManager.playError();
-      } else {
-        soundManager.playSuccess();
+    try {
+      const result = await executeCommand(command, args, commands);
+      
+      if (result !== null) {
+        newHistory.push(result);
+        if (result.includes('Error') || result.includes('Unknown') || result.includes('Ошибка')) {
+          soundManager.playError();
+        } else {
+          soundManager.playSuccess();
+        }
       }
+    } catch (error) {
+      console.error('Command execution error:', error);
+      newHistory.push(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      soundManager.playError();
     }
 
     setHistory(newHistory);
     setInput('');
     
-    setIsProcessing(true);
-    soundManager.playProcessing();
     setTimeout(() => setIsProcessing(false), 500);
   };
 

@@ -1,7 +1,9 @@
 
+import { sendToOllama } from './ollamaUtils';
+
 export interface CommandResult {
-  type: 'string' | 'function';
-  value: string | (() => void) | ((args: string) => string);
+  type: 'string' | 'function' | 'async';
+  value: string | (() => void) | ((args: string) => string) | ((args: string) => Promise<string>);
 }
 
 export const createCommands = (
@@ -14,7 +16,7 @@ export const createCommands = (
   const commands: Record<string, CommandResult> = {
     help: {
       type: 'string',
-      value: 'Available commands: help, clear, status, neural, scan, deploy, profile, dashboard, setbio, settwitter'
+      value: 'Available commands: help, clear, status, neural, scan, deploy, profile, dashboard, setbio, settwitter, ask'
     },
     clear: {
       type: 'function',
@@ -24,7 +26,6 @@ export const createCommands = (
           ? `Welcome ${userNickname.toUpperCase()} to Titan Terminal v1.0.0`
           : 'Welcome to Titan Terminal v1.0.0';
         
-        // Сброс истории к начальному состоянию
         setHistory([
           welcomeMessage,
           'Neural network interface initialized...',
@@ -71,17 +72,26 @@ export const createCommands = (
         setUserTwitter(newTwitter);
         return `Twitter updated: ${newTwitter}`;
       }
+    },
+    ask: {
+      type: 'async',
+      value: async (args: string) => {
+        if (!args.trim()) {
+          return 'Usage: ask <your question>';
+        }
+        return await sendToOllama(args);
+      }
     }
   };
 
   return commands;
 };
 
-export const executeCommand = (
+export const executeCommand = async (
   command: string,
   args: string[],
   commands: Record<string, CommandResult>
-): string | null => {
+): Promise<string | null> => {
   console.log('Executing command:', command, 'with args:', args);
   const cmd = commands[command];
   if (!cmd) {
@@ -90,6 +100,9 @@ export const executeCommand = (
 
   if (cmd.type === 'string') {
     return cmd.value as string;
+  } else if (cmd.type === 'async') {
+    const func = cmd.value as (args: string) => Promise<string>;
+    return await func(args.join(' '));
   } else {
     const func = cmd.value as (() => void) | ((args: string) => string);
     if (command === 'setbio' || command === 'settwitter') {
