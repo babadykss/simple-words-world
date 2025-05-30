@@ -114,8 +114,10 @@ const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
           Twitter Account
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-green-400 text-xs">{userTwitter || '@crypto_titan_2024'}</span>
-          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+          <span className="text-green-400 text-xs">
+            {userTwitter || 'Not set - use "settwitter @username"'}
+          </span>
+          <div className={`w-2 h-2 rounded-full ${userTwitter ? 'bg-green-400' : 'bg-gray-500'}`}></div>
         </div>
       </div>
 
@@ -126,7 +128,7 @@ const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
           Bio
         </div>
         <div className="text-green-400/80 text-xs leading-relaxed">
-          {userBio || 'Neural network enthusiast exploring the depths of blockchain technology. Building the future one transaction at a time. 🚀'}
+          {userBio || 'No bio set - use "setbio your bio text"'}
         </div>
       </div>
     </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TerminalTabs from '../components/TerminalTabs';
 import ProfileTab from '../components/ProfileTab';
@@ -21,8 +20,8 @@ const Index = () => {
   ]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showCoreMenu, setShowCoreMenu] = useState(false);
-  const [userBio, setUserBio] = useState('Neural network enthusiast exploring the depths of blockchain technology. Building the future one transaction at a time. 🚀');
-  const [userTwitter, setUserTwitter] = useState('@crypto_titan_2024');
+  const [userBio, setUserBio] = useState('');
+  const [userTwitter, setUserTwitter] = useState('');
 
   const commands = createCommands(setHistory, setActiveTab, setUserBio, setUserTwitter);
 
