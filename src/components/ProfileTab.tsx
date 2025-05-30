@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Award, Twitter, FileText, Check, Crown, Shield } from 'lucide-react';
 import { getUserUID } from '../utils/userUtils';
 
@@ -11,7 +11,29 @@ interface ProfileTabProps {
 const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
   const [showAllAchievements, setShowAllAchievements] = useState(false);
   const [showUpgradeMenu, setShowUpgradeMenu] = useState(false);
+  const [userNickname, setUserNickname] = useState('CryptoTitan');
   const userUID = getUserUID();
+
+  // Load user nickname from extension storage
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        if (typeof chrome !== 'undefined' && chrome.runtime) {
+          const response = await new Promise((resolve) => {
+            chrome.runtime.sendMessage({ action: 'getUserData' }, resolve);
+          });
+          
+          if (response && response.userNickname) {
+            setUserNickname(response.userNickname);
+          }
+        }
+      } catch (error) {
+        console.log('Could not load user data from extension storage');
+      }
+    };
+
+    loadUserData();
+  }, []);
 
   // No achievements unlocked by default
   const achievements: any[] = [];
@@ -44,7 +66,7 @@ const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
           </div>
           <div className="flex justify-between">
             <span className="text-green-400/70 text-xs">Nickname:</span>
-            <span className="text-green-300 text-xs">CryptoTitan</span>
+            <span className="text-green-300 text-xs">{userNickname}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-green-400/70 text-xs">Role:</span>
