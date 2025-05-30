@@ -1,31 +1,50 @@
 
-const OLLAMA_URL = 'http://localhost:11434/api/chat';
-
 export const sendToOllama = async (message: string): Promise<string> => {
   try {
-    const response = await fetch(OLLAMA_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama2', // или какая у тебя модель
-        messages: [
-          {
-            role: 'user',
-            content: message
+    // Check if we're in extension environment
+    if (typeof window !== 'undefined' && (window as any).chrome && (window as any).chrome.runtime) {
+      // Use background script for extension
+      return new Promise((resolve) => {
+        (window as any).chrome.runtime.sendMessage(
+          { 
+            action: 'sendToOllama', 
+            message: message 
+          },
+          (response: any) => {
+            if (response.success) {
+              resolve(response.content);
+            } else {
+              resolve(response.error || 'Ошибка при обращении к AI');
+            }
           }
-        ],
-        stream: false
-      }),
-    });
+        );
+      });
+    } else {
+      // Fallback for non-extension environment
+      const response = await fetch('http://localhost:11434/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'llama2',
+          messages: [
+            {
+              role: 'user',
+              content: message
+            }
+          ],
+          stream: false
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.message?.content || 'AI не ответил';
     }
-
-    const data = await response.json();
-    return data.message?.content || 'AI не ответил';
   } catch (error) {
     console.error('Ошибка при обращении к Ollama:', error);
     if (error instanceof Error && error.name === 'TypeError') {

@@ -27,6 +27,9 @@
     "tabs",
     "activeTab"
   ],
+  "host_permissions": [
+    "http://localhost:11434/*"
+  ],
   "web_accessible_resources": [
     {
       "resources": ["welcome.html", "welcome.js", "popup.html"],
