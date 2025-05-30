@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Wallet, Image, Activity, Search, TrendingUp, TrendingDown, Wifi } from 'lucide-react';
+import { Image, Activity, Search, TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
 
 const DashboardTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,18 +10,6 @@ const DashboardTab = () => {
     { symbol: 'BTC', name: 'Bitcoin', price: '$43,250.00', change: '+2.45%', isUp: true },
     { symbol: 'ETH', name: 'Ethereum', price: '$2,680.50', change: '+1.82%', isUp: true },
     { symbol: 'SOL', name: 'Solana', price: '$98.75', change: '-0.65%', isUp: false },
-  ];
-
-  const nftData = [
-    { name: 'Bored Ape #1234', floor: '45.2 ETH' },
-    { name: 'Pudgy Penguin #567', floor: '8.7 ETH' },
-    { name: 'Sol Monkey #890', floor: '12.5 SOL' },
-  ];
-
-  const recentActivity = [
-    { action: 'Received', amount: '0.5 ETH', time: '2m ago', network: 'ETH' },
-    { action: 'Sent', amount: '100 USDC', time: '15m ago', network: 'SOL' },
-    { action: 'Swapped', amount: '0.01 BTC', time: '1h ago', network: 'BTC' },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -94,38 +82,36 @@ const DashboardTab = () => {
         </div>
       </div>
 
-      {/* NFTs */}
+      {/* NFT Collection */}
       <div>
         <div className="flex items-center gap-2 text-green-400 text-sm font-semibold mb-2">
           <Image className="w-4 h-4" />
           NFT Collection
         </div>
-        <div className="space-y-2">
-          {nftData.map((nft) => (
-            <div key={nft.name} className="bg-gray-900/50 border border-green-500/20 rounded p-2">
-              <div className="text-green-400 text-xs">{nft.name}</div>
-              <div className="text-green-400/70 text-xs">Floor: {nft.floor}</div>
-            </div>
-          ))}
+        <div className="bg-gray-900/50 border border-green-500/20 rounded p-3">
+          <div className="text-green-400/50 text-xs text-center">No NFTs found</div>
         </div>
       </div>
 
-      {/* Recent Activity */}
+      {/* Recent Transactions */}
       <div>
         <div className="flex items-center gap-2 text-green-400 text-sm font-semibold mb-2">
           <Activity className="w-4 h-4" />
-          Recent Activity
+          Recent Transactions
         </div>
-        <div className="space-y-2">
-          {recentActivity.map((activity, index) => (
-            <div key={index} className="bg-gray-900/50 border border-green-500/20 rounded p-2">
-              <div className="flex justify-between items-center">
-                <span className="text-green-400 text-xs">{activity.action} {activity.amount}</span>
-                <span className="text-green-400/70 text-xs">{activity.time}</span>
-              </div>
-              <div className="text-green-400/70 text-xs">{activity.network}</div>
-            </div>
-          ))}
+        <div className="bg-gray-900/50 border border-green-500/20 rounded p-3">
+          <div className="text-green-400/50 text-xs text-center">No recent transactions</div>
+        </div>
+      </div>
+
+      {/* On-Chain Metrics */}
+      <div>
+        <div className="flex items-center gap-2 text-green-400 text-sm font-semibold mb-2">
+          <BarChart3 className="w-4 h-4" />
+          On-Chain Metrics
+        </div>
+        <div className="bg-gray-900/50 border border-green-500/20 rounded p-3">
+          <div className="text-green-400/50 text-xs text-center">No metrics available</div>
         </div>
       </div>
     </div>
