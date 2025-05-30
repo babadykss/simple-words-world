@@ -1,21 +1,16 @@
 
 import React, { useState } from 'react';
-import { Wallet, Image, Activity, Search, TrendingUp, TrendingDown, Wifi } from 'lucide-react';
+import { Wallet, Image, Activity, Search, TrendingUp, TrendingDown, Wifi, Check } from 'lucide-react';
 
 const DashboardTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showRestriction, setShowRestriction] = useState(false);
+  const [showAllAchievements, setShowAllAchievements] = useState(false);
 
   const cryptoData = [
     { symbol: 'BTC', name: 'Bitcoin', price: '$43,250.00', change: '+2.45%', isUp: true },
     { symbol: 'ETH', name: 'Ethereum', price: '$2,680.50', change: '+1.82%', isUp: true },
     { symbol: 'SOL', name: 'Solana', price: '$98.75', change: '-0.65%', isUp: false },
-  ];
-
-  const walletData = [
-    { network: 'Ethereum', balance: '2.45 ETH', usd: '$6,567.23' },
-    { network: 'Solana', balance: '125.30 SOL', usd: '$12,373.48' },
-    { network: 'Bitcoin', balance: '0.0823 BTC', usd: '$3,559.58' },
   ];
 
   const nftData = [
@@ -30,9 +25,30 @@ const DashboardTab = () => {
     { action: 'Swapped', amount: '0.01 BTC', time: '1h ago', network: 'BTC' },
   ];
 
+  const allAchievements = [
+    { name: 'First Transaction', description: 'Complete your first crypto transaction', unlocked: true },
+    { name: 'Crypto Explorer', description: 'Explore 5 different cryptocurrencies', unlocked: true },
+    { name: 'Dark Mode Lover', description: 'Use dark mode for 7 days straight', unlocked: true },
+    { name: 'Whale Spotter', description: 'Track a transaction over $1M', unlocked: false },
+    { name: 'NFT Collector', description: 'Own 10 or more NFTs', unlocked: false },
+    { name: 'DeFi Master', description: 'Use 5 different DeFi protocols', unlocked: false },
+    { name: 'Portfolio Builder', description: 'Maintain a portfolio over $50k for 30 days', unlocked: false },
+    { name: 'Speed Trader', description: 'Execute 100 trades in a single day', unlocked: false },
+    { name: 'Diamond Hands', description: 'Hold a position for over 1 year', unlocked: false },
+    { name: 'Network Pioneer', description: 'Use a new blockchain within 24h of launch', unlocked: false },
+  ];
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const query = searchQuery.toLowerCase();
+    
+    // Check if it's a wallet address (starts with 0x and has 42 characters)
+    if (query.startsWith('0x') && query.length === 42) {
+      setShowRestriction(true);
+      setTimeout(() => setShowRestriction(false), 3000);
+      return;
+    }
+    
     if (query.includes('sol') || query.includes('eth') || query.includes('btc') || query.includes('эфир')) {
       setShowRestriction(true);
       setTimeout(() => setShowRestriction(false), 3000);
@@ -49,14 +65,17 @@ const DashboardTab = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search tokens (BTC, ETH, SOL...)"
+            placeholder="Search tokens or paste wallet address..."
             className="flex-1 bg-transparent text-green-400 text-xs outline-none placeholder-green-400/50"
           />
         </form>
         {showRestriction && (
-          <div className="mt-2 p-2 bg-red-500/10 border border-red-500/30 rounded">
-            <div className="text-red-400 text-xs mb-1">Only for Dark Titan Users</div>
-            <div className="text-green-400 text-xs font-mono">0x834Bdb637aA4AbD984bf3b3455C43ED0047Fa773</div>
+          <div className="mt-2 p-3 bg-red-500/10 border border-red-500/30 rounded">
+            <div className="text-red-400 text-sm font-semibold mb-1">⚠️ Only for Dark Titan Users</div>
+            <div className="text-red-300 text-xs mb-2">This feature requires Dark Titan access level</div>
+            <div className="text-green-400 text-xs font-mono bg-black/30 p-1 rounded">
+              Premium Feature Locked
+            </div>
           </div>
         )}
       </div>
@@ -89,22 +108,37 @@ const DashboardTab = () => {
         </div>
       </div>
 
-      {/* Real-time Data Feed */}
+      {/* Achievements with Check All button */}
       <div>
-        <div className="flex items-center gap-2 text-green-400 text-sm font-semibold mb-2">
-          <Wifi className="w-4 h-4" />
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-green-400 text-sm font-semibold">Achievements</div>
+          <button
+            onClick={() => setShowAllAchievements(!showAllAchievements)}
+            className="flex items-center gap-1 px-2 py-1 bg-green-500/20 border border-green-500/30 rounded text-green-400 text-xs hover:bg-green-500/30 transition-colors"
+          >
+            <Check className="w-3 h-3" />
+            Check All
+          </button>
         </div>
-        <div className="space-y-2">
-          {walletData.map((wallet) => (
-            <div key={wallet.network} className="bg-gray-900/50 border border-green-500/20 rounded p-2">
-              <div className="flex justify-between items-center">
-                <span className="text-green-400 text-xs">{wallet.network}</span>
-                <span className="text-green-300 text-xs font-mono">{wallet.usd}</span>
-              </div>
-              <div className="text-green-400/70 text-xs">{wallet.balance}</div>
+        
+        {showAllAchievements && (
+          <div className="mb-3 p-3 bg-gray-900/70 border border-green-500/30 rounded">
+            <div className="text-green-400 text-xs font-semibold mb-2">All Available Achievements:</div>
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {allAchievements.map((achievement, index) => (
+                <div key={index} className="flex items-start gap-2 p-2 bg-black/30 rounded">
+                  <div className={`w-2 h-2 rounded-full mt-1 ${achievement.unlocked ? 'bg-green-400' : 'bg-gray-500'}`}></div>
+                  <div className="flex-1">
+                    <div className={`text-xs font-medium ${achievement.unlocked ? 'text-green-400' : 'text-gray-400'}`}>
+                      {achievement.name}
+                    </div>
+                    <div className="text-xs text-gray-500">{achievement.description}</div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* NFTs */}
