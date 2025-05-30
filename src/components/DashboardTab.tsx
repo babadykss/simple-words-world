@@ -1,11 +1,10 @@
 
 import React, { useState } from 'react';
-import { Wallet, Image, Activity, Search, TrendingUp, TrendingDown, Wifi, Check } from 'lucide-react';
+import { Wallet, Image, Activity, Search, TrendingUp, TrendingDown, Wifi } from 'lucide-react';
 
 const DashboardTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showRestriction, setShowRestriction] = useState(false);
-  const [showAllAchievements, setShowAllAchievements] = useState(false);
 
   const cryptoData = [
     { symbol: 'BTC', name: 'Bitcoin', price: '$43,250.00', change: '+2.45%', isUp: true },
@@ -23,19 +22,6 @@ const DashboardTab = () => {
     { action: 'Received', amount: '0.5 ETH', time: '2m ago', network: 'ETH' },
     { action: 'Sent', amount: '100 USDC', time: '15m ago', network: 'SOL' },
     { action: 'Swapped', amount: '0.01 BTC', time: '1h ago', network: 'BTC' },
-  ];
-
-  const allAchievements = [
-    { name: 'First Transaction', description: 'Complete your first crypto transaction', unlocked: true },
-    { name: 'Crypto Explorer', description: 'Explore 5 different cryptocurrencies', unlocked: true },
-    { name: 'Dark Mode Lover', description: 'Use dark mode for 7 days straight', unlocked: true },
-    { name: 'Whale Spotter', description: 'Track a transaction over $1M', unlocked: false },
-    { name: 'NFT Collector', description: 'Own 10 or more NFTs', unlocked: false },
-    { name: 'DeFi Master', description: 'Use 5 different DeFi protocols', unlocked: false },
-    { name: 'Portfolio Builder', description: 'Maintain a portfolio over $50k for 30 days', unlocked: false },
-    { name: 'Speed Trader', description: 'Execute 100 trades in a single day', unlocked: false },
-    { name: 'Diamond Hands', description: 'Hold a position for over 1 year', unlocked: false },
-    { name: 'Network Pioneer', description: 'Use a new blockchain within 24h of launch', unlocked: false },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -71,8 +57,8 @@ const DashboardTab = () => {
         </form>
         {showRestriction && (
           <div className="mt-2 p-3 bg-red-500/10 border border-red-500/30 rounded">
-            <div className="text-red-400 text-sm font-semibold mb-1">⚠️ Only for Dark Titan Users</div>
-            <div className="text-red-300 text-xs mb-2">This feature requires Dark Titan access level</div>
+            <div className="text-red-400 text-sm font-semibold mb-1">⚠️ Only for Dark Users</div>
+            <div className="text-red-300 text-xs mb-2">This feature requires Dark access level</div>
             <div className="text-green-400 text-xs font-mono bg-black/30 p-1 rounded">
               Premium Feature Locked
             </div>
@@ -106,39 +92,6 @@ const DashboardTab = () => {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Achievements with Check All button */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <div className="text-green-400 text-sm font-semibold">Achievements</div>
-          <button
-            onClick={() => setShowAllAchievements(!showAllAchievements)}
-            className="flex items-center gap-1 px-2 py-1 bg-green-500/20 border border-green-500/30 rounded text-green-400 text-xs hover:bg-green-500/30 transition-colors"
-          >
-            <Check className="w-3 h-3" />
-            Check All
-          </button>
-        </div>
-        
-        {showAllAchievements && (
-          <div className="mb-3 p-3 bg-gray-900/70 border border-green-500/30 rounded">
-            <div className="text-green-400 text-xs font-semibold mb-2">All Available Achievements:</div>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {allAchievements.map((achievement, index) => (
-                <div key={index} className="flex items-start gap-2 p-2 bg-black/30 rounded">
-                  <div className={`w-2 h-2 rounded-full mt-1 ${achievement.unlocked ? 'bg-green-400' : 'bg-gray-500'}`}></div>
-                  <div className="flex-1">
-                    <div className={`text-xs font-medium ${achievement.unlocked ? 'text-green-400' : 'text-gray-400'}`}>
-                      {achievement.name}
-                    </div>
-                    <div className="text-xs text-gray-500">{achievement.description}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* NFTs */}

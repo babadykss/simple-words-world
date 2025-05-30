@@ -68,9 +68,9 @@ const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
         {showAllAchievements && (
           <div className="mb-3 p-3 bg-gray-900/70 border border-green-500/30 rounded">
             <div className="text-green-400 text-xs font-semibold mb-2">All Available Achievements:</div>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
+            <div className="space-y-2 max-h-40 overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-green-500/30 pr-2">
               {allAchievements.map((achievement, index) => (
-                <div key={index} className="flex items-start gap-2 p-2 bg-black/30 rounded">
+                <div key={index} className="flex items-start gap-2 p-2 bg-black/30 rounded border border-green-500/10">
                   <div className={`w-2 h-2 rounded-full mt-1 ${achievement.unlocked ? 'bg-green-400' : 'bg-gray-500'}`}></div>
                   <div className="flex-1">
                     <div className={`text-xs font-medium ${achievement.unlocked ? 'text-green-400' : 'text-gray-400'}`}>
