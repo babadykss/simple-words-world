@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Validate nickname
     if (!nickname || nickname.length < 2) {
-      showError('Nickname must be at least 2 characters long');
+      showError('Username must be at least 2 characters');
       return;
     }
 
@@ -34,17 +34,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (response && response.success) {
-        // Success - close welcome window and open main popup
+        // Success - close welcome tab
         setTimeout(() => {
           window.close();
         }, 1000);
       } else {
-        showError('Failed to save user data. Please try again.');
+        showError('Connection failed - try again');
         setLoadingState(false);
       }
     } catch (error) {
       console.error('Error saving user data:', error);
-      showError('Connection error. Please try again.');
+      showError('System error - try again');
       setLoadingState(false);
     }
   });
@@ -64,12 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function showError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = 'block';
-    nicknameInput.style.borderColor = '#ef4444';
+    nicknameInput.classList.add('error');
   }
 
   function hideError() {
     errorMessage.style.display = 'none';
-    nicknameInput.style.borderColor = '#22c55e';
+    nicknameInput.classList.remove('error');
   }
 
   function setLoadingState(loading) {
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       loadingMessage.style.display = 'block';
       hideError();
     } else {
-      loginBtn.textContent = 'Initialize Neural Connection';
+      loginBtn.textContent = 'Initialize Connection';
       loadingMessage.style.display = 'none';
     }
   }

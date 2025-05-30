@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to Titan Terminal</title>
+  <title>Titan Terminal - Authentication</title>
   <style>
     * {
       margin: 0;
@@ -13,9 +13,9 @@
     }
 
     body {
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-      color: #22c55e;
-      font-family: 'Monaco', 'Consolas', monospace;
+      background: #000000;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
       height: 100vh;
       display: flex;
       align-items: center;
@@ -23,153 +23,163 @@
       overflow: hidden;
     }
 
-    .welcome-container {
-      background: rgba(0, 0, 0, 0.8);
-      border: 2px solid #22c55e;
-      border-radius: 12px;
-      padding: 40px;
+    .auth-container {
+      background: #0a0a0a;
+      border: 2px solid #00ff00;
+      width: 500px;
+      padding: 60px 40px;
       text-align: center;
-      box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
-      backdrop-filter: blur(10px);
-      width: 90%;
-      max-width: 450px;
     }
 
-    .title {
+    .system-header {
+      color: #00ff00;
       font-size: 24px;
       font-weight: bold;
+      letter-spacing: 2px;
       margin-bottom: 10px;
-      background: linear-gradient(90deg, #22c55e, #06b6d4, #a855f7, #06b6d4, #22c55e);
-      background-size: 200% 100%;
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shimmer 3s ease-in-out infinite;
+      text-transform: uppercase;
     }
 
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .subtitle {
-      color: #22c55e;
-      margin-bottom: 30px;
-      font-size: 14px;
-      opacity: 0.8;
-    }
-
-    .neural-text {
-      color: #06b6d4;
-      margin-bottom: 30px;
+    .version-info {
+      color: #666666;
       font-size: 12px;
-      animation: pulse 2s infinite;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: 8px;
-      color: #22c55e;
+    .status-line {
+      color: #00ff00;
       font-size: 14px;
+      margin-bottom: 30px;
+      text-align: left;
+      border-left: 3px solid #00ff00;
+      padding-left: 15px;
+    }
+
+    .auth-form {
       text-align: left;
     }
 
-    .form-input {
+    .input-group {
+      margin-bottom: 30px;
+    }
+
+    .input-label {
+      display: block;
+      color: #00ff00;
+      font-size: 12px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .input-field {
       width: 100%;
-      padding: 12px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid #22c55e;
-      border-radius: 6px;
-      color: #22c55e;
-      font-family: inherit;
-      font-size: 14px;
+      background: #000000;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      padding: 12px 15px;
       outline: none;
-      transition: all 0.3s ease;
+      transition: border-color 0.2s;
     }
 
-    .form-input:focus {
-      border-color: #06b6d4;
-      box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+    .input-field:focus {
+      border-color: #ffffff;
     }
 
-    .login-button {
+    .input-field.error {
+      border-color: #ff0000;
+    }
+
+    .login-btn {
       width: 100%;
-      padding: 14px;
-      background: linear-gradient(90deg, #22c55e, #06b6d4);
+      background: #00ff00;
+      color: #000000;
       border: none;
-      border-radius: 6px;
-      color: black;
-      font-weight: bold;
+      font-family: 'Courier New', monospace;
       font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 15px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s;
       margin-top: 20px;
     }
 
-    .login-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
+    .login-btn:hover {
+      background: #ffffff;
     }
 
-    .login-button:disabled {
-      opacity: 0.5;
+    .login-btn:disabled {
+      background: #333333;
+      color: #666666;
       cursor: not-allowed;
-      transform: none;
     }
 
     .error-message {
-      color: #ef4444;
-      font-size: 12px;
-      margin-top: 10px;
+      color: #ff0000;
+      font-size: 11px;
+      margin-top: 8px;
       display: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .loading {
+    .loading-message {
+      color: #ffff00;
+      font-size: 11px;
+      margin-top: 15px;
       display: none;
-      color: #22c55e;
-      font-size: 12px;
-      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .terminal-cursor {
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="welcome-container">
-    <h1 class="title">Welcome to Titan Terminal v1.0.0</h1>
-    <p class="subtitle">Advanced Neural Interface Initialized</p>
-    <p class="neural-text">Neural Core Online • Quantum Processors Ready • AI Assisted</p>
+  <div class="auth-container">
+    <div class="system-header">Titan Terminal</div>
+    <div class="version-info">System Version 1.0.0</div>
     
-    <form id="loginForm">
-      <div class="form-group">
-        <label class="form-label" for="nickname">Choose your Terminal Nickname:</label>
+    <div class="status-line">
+      > Neural Core: ONLINE<br>
+      > Security Protocol: ACTIVE<br>
+      > Authentication Required<span class="terminal-cursor">_</span>
+    </div>
+    
+    <form id="loginForm" class="auth-form">
+      <div class="input-group">
+        <label class="input-label" for="nickname">Terminal Access Code:</label>
         <input 
           type="text" 
           id="nickname" 
-          class="form-input" 
-          placeholder="Enter your nickname..."
+          class="input-field" 
+          placeholder="Enter username..."
           maxlength="20"
           required
         />
+        <div class="error-message" id="errorMessage">
+          Access Denied - Invalid Username
+        </div>
       </div>
       
-      <button type="submit" class="login-button" id="loginBtn">
-        Initialize Neural Connection
+      <button type="submit" class="login-btn" id="loginBtn">
+        Initialize Connection
       </button>
       
-      <div class="error-message" id="errorMessage">
-        Please enter a nickname to continue
-      </div>
-      
-      <div class="loading" id="loadingMessage">
-        Connecting to Titan Network...
+      <div class="loading-message" id="loadingMessage">
+        Establishing Secure Connection...
       </div>
     </form>
   </div>

@@ -5,7 +5,6 @@
   "version": "1.0.0",
   "description": "Advanced neural terminal interface for crypto operations",
   "action": {
-    "default_popup": "popup.html",
     "default_title": "Titan Terminal",
     "default_icon": {
       "16": "icons/icon16.png",
@@ -24,11 +23,12 @@
     "128": "icons/icon128.png"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "tabs"
   ],
   "web_accessible_resources": [
     {
-      "resources": ["welcome.html", "welcome.js"],
+      "resources": ["welcome.html", "welcome.js", "popup.html"],
       "matches": ["<all_urls>"]
     }
   ]

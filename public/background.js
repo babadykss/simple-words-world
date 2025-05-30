@@ -2,13 +2,21 @@
 // Background script for extension installation handling
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    // Open welcome window when extension is first installed
-    chrome.windows.create({
-      url: chrome.runtime.getURL('welcome.html'),
-      type: 'popup',
-      width: 500,
-      height: 650,
-      focused: true
+    // Open welcome page in new tab when extension is first installed
+    chrome.tabs.create({
+      url: chrome.runtime.getURL('welcome.html')
+    });
+  }
+});
+
+// Check if user is logged in when extension icon is clicked
+chrome.action.onClicked.addListener(async () => {
+  const result = await chrome.storage.local.get(['isLoggedIn']);
+  
+  if (!result.isLoggedIn) {
+    // User not logged in, redirect to welcome page
+    chrome.tabs.create({
+      url: chrome.runtime.getURL('welcome.html')
     });
   }
 });
