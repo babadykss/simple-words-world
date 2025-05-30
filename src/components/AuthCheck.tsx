@@ -5,6 +5,10 @@ interface AuthCheckProps {
   children: React.ReactNode;
 }
 
+interface ChromeResponse {
+  isLoggedIn?: boolean;
+}
+
 // Declare global chrome types for extension environment
 declare global {
   interface Window {
@@ -24,7 +28,7 @@ const AuthCheck = ({ children }: AuthCheckProps) => {
     const checkAuth = async () => {
       try {
         if (typeof window !== 'undefined' && window.chrome && window.chrome.runtime) {
-          const response = await new Promise<{isLoggedIn?: boolean}>((resolve) => {
+          const response = await new Promise<ChromeResponse>((resolve) => {
             window.chrome!.runtime!.sendMessage({ action: 'getUserData' }, resolve);
           });
           
