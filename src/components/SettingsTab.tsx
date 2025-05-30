@@ -17,19 +17,22 @@ const SettingsTab = () => {
         </div>
         <button
           onClick={() => onChange(!enabled)}
-          className={`w-10 h-6 rounded-sm border-2 transition-all duration-200 ${
+          className={`relative w-8 h-5 rounded border transition-all duration-300 ease-in-out transform hover:scale-105 ${
             enabled 
-              ? 'bg-green-500/20 border-green-500 shadow-lg shadow-green-500/20' 
-              : 'bg-gray-700/50 border-gray-600'
+              ? 'bg-green-500/30 border-green-500 shadow-md shadow-green-500/30' 
+              : 'bg-gray-700/50 border-gray-600 hover:border-gray-500'
           }`}
         >
           <div
-            className={`w-4 h-4 rounded-sm transition-all duration-200 ${
+            className={`absolute top-0.5 w-3 h-3 rounded transition-all duration-300 ease-in-out transform ${
               enabled 
-                ? 'translate-x-4 bg-green-400 shadow-md shadow-green-400/50' 
-                : 'translate-x-0 bg-gray-500'
+                ? 'translate-x-4 bg-green-400 shadow-lg shadow-green-400/50 scale-110' 
+                : 'translate-x-0.5 bg-gray-500 hover:bg-gray-400'
             }`}
           />
+          {enabled && (
+            <div className="absolute inset-0 bg-green-400/10 rounded animate-pulse" />
+          )}
         </button>
       </div>
     </div>
