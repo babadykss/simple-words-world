@@ -16,6 +16,10 @@ import { soundManager } from '../utils/soundUtils';
 declare global {
   interface Window {
     chrome?: {
+      runtime?: {
+        sendMessage: (message: any, callback: (response: any) => void) => void;
+        getURL: (path: string) => string;
+      };
       storage?: {
         local?: {
           get: (keys: string[]) => Promise<any>;
