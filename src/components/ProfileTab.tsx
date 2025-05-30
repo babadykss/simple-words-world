@@ -10,16 +10,13 @@ interface ProfileTabProps {
 const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
   const [showAllAchievements, setShowAllAchievements] = useState(false);
 
-  const achievements = [
-    { name: 'First Transaction', date: '2024-01-15', icon: Zap },
-    { name: 'Crypto Explorer', date: '2024-02-20', icon: Star },
-    { name: 'Dark Mode Lover', date: '2024-03-10', icon: Moon },
-  ];
+  // No achievements unlocked by default
+  const achievements: any[] = [];
 
   const allAchievements = [
-    { name: 'First Transaction', description: 'Complete your first crypto transaction', unlocked: true, date: '2024-01-15' },
-    { name: 'Crypto Explorer', description: 'Explore 5 different cryptocurrencies', unlocked: true, date: '2024-02-20' },
-    { name: 'Dark Mode Lover', description: 'Use dark mode for 7 days straight', unlocked: true, date: '2024-03-10' },
+    { name: 'First Transaction', description: 'Complete your first crypto transaction', unlocked: false },
+    { name: 'Crypto Explorer', description: 'Explore 5 different cryptocurrencies', unlocked: false },
+    { name: 'Dark Mode Lover', description: 'Use dark mode for 7 days straight', unlocked: false },
     { name: 'Whale Spotter', description: 'Track a transaction over $1M', unlocked: false },
     { name: 'NFT Collector', description: 'Own 10 or more NFTs', unlocked: false },
     { name: 'DeFi Master', description: 'Use 5 different DeFi protocols', unlocked: false },
@@ -68,7 +65,10 @@ const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
         {showAllAchievements && (
           <div className="mb-3 p-3 bg-gray-900/70 border border-green-500/30 rounded">
             <div className="text-green-400 text-xs font-semibold mb-2">All Available Achievements:</div>
-            <div className="space-y-2 max-h-40 overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-green-500/30 pr-2">
+            <div className="space-y-2 max-h-40 overflow-y-auto pr-2" style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(34, 197, 94, 0.3) rgba(17, 24, 39, 1)'
+            }}>
               {allAchievements.map((achievement, index) => (
                 <div key={index} className="flex items-start gap-2 p-2 bg-black/30 rounded border border-green-500/10">
                   <div className={`w-2 h-2 rounded-full mt-1 ${achievement.unlocked ? 'bg-green-400' : 'bg-gray-500'}`}></div>
@@ -87,22 +87,28 @@ const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
           </div>
         )}
 
-        <div className="space-y-2">
-          {achievements.map((achievement, index) => {
-            const IconComponent = achievement.icon;
-            return (
-              <div key={index} className="bg-gray-900/50 border border-green-500/20 rounded p-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <IconComponent className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400 text-xs">{achievement.name}</span>
+        {achievements.length === 0 ? (
+          <div className="bg-gray-900/50 border border-green-500/20 rounded p-3">
+            <div className="text-green-400/50 text-xs text-center">No achievements unlocked yet</div>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {achievements.map((achievement, index) => {
+              const IconComponent = achievement.icon;
+              return (
+                <div key={index} className="bg-gray-900/50 border border-green-500/20 rounded p-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <IconComponent className="w-4 h-4 text-green-400" />
+                      <span className="text-green-400 text-xs">{achievement.name}</span>
+                    </div>
+                    <span className="text-green-400/70 text-xs">{achievement.date}</span>
                   </div>
-                  <span className="text-green-400/70 text-xs">{achievement.date}</span>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Twitter */}
