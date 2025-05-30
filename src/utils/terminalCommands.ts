@@ -24,7 +24,7 @@ export const createCommands = (
           ? `Welcome ${userNickname.toUpperCase()} to Titan Terminal v1.0.0`
           : 'Welcome to Titan Terminal v1.0.0';
         
-        // Используем функцию обновления для правильной очистки
+        // Сброс истории к начальному состоянию
         setHistory([
           welcomeMessage,
           'Neural network interface initialized...',
