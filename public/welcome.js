@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   const nicknameInput = document.getElementById('nickname');
@@ -41,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (response && response.success) {
         // Show success message
-        showSuccess('Login successful! Opening extension...');
+        showSuccess('Neural link established! Opening terminal...');
         
         // Close welcome tab after delay
         setTimeout(() => {
@@ -52,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }, 1500);
       } else {
-        showError(response?.error || 'Login failed - try again');
+        showError(response?.error || 'Neural link failed - try again');
         setLoadingState(false);
       }
     } catch (error) {
@@ -96,13 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
     nicknameInput.disabled = loading;
     
     if (loading) {
-      loginBtn.textContent = 'Connecting...';
+      loginBtn.textContent = 'CONNECTING...';
       loadingMessage.style.display = 'block';
       loadingMessage.style.color = '#ffff00';
-      loadingMessage.textContent = 'Establishing connection...';
+      loadingMessage.textContent = 'Establishing neural connection...';
       hideError();
     } else {
-      loginBtn.textContent = 'INITIALIZE';
+      loginBtn.textContent = 'INITIALIZE NEURAL LINK';
       loadingMessage.style.display = 'none';
     }
   }

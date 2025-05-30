@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import TerminalTabs from '../components/TerminalTabs';
 import ProfileTab from '../components/ProfileTab';
@@ -15,17 +14,44 @@ import { soundManager } from '../utils/soundUtils';
 const Index = () => {
   const [activeTab, setActiveTab] = useState('terminal');
   const [input, setInput] = useState('');
-  const [history, setHistory] = useState<string[]>([
-    'Welcome to Titan Terminal v1.0.0',
-    'Neural network interface initialized...',
-    'Type "help" for available commands',
-  ]);
+  const [userNickname, setUserNickname] = useState('');
+  const [history, setHistory] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showCoreMenu, setShowCoreMenu] = useState(false);
   const [userBio, setUserBio] = useState('');
   const [userTwitter, setUserTwitter] = useState('');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [soundVolume, setSoundVolume] = useState(50);
+
+  // Load user data and initialize history
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const result = await chrome.storage.local.get(['userNickname']);
+        const nickname = result.userNickname || '';
+        setUserNickname(nickname);
+        
+        const welcomeMessage = nickname 
+          ? `Welcome ${nickname.toUpperCase()} to Titan Terminal v1.0.0`
+          : 'Welcome to Titan Terminal v1.0.0';
+        
+        setHistory([
+          welcomeMessage,
+          'Neural network interface initialized...',
+          'Type "help" for available commands',
+        ]);
+      } catch (error) {
+        console.error('Error loading user data:', error);
+        setHistory([
+          'Welcome to Titan Terminal v1.0.0',
+          'Neural network interface initialized...',
+          'Type "help" for available commands',
+        ]);
+      }
+    };
+
+    loadUserData();
+  }, []);
 
   useEffect(() => {
     soundManager.setEnabled(soundEnabled);
@@ -35,7 +61,7 @@ const Index = () => {
     soundManager.setVolume(soundVolume);
   }, [soundVolume]);
 
-  const commands = createCommands(setHistory, setActiveTab, setUserBio, setUserTwitter);
+  const commands = createCommands(setHistory, setActiveTab, setUserBio, setUserTwitter, userNickname);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

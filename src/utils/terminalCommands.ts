@@ -8,7 +8,8 @@ export const createCommands = (
   setHistory: (history: string[] | ((prev: string[]) => string[])) => void,
   setActiveTab: (tab: string) => void,
   setUserBio: (bio: string) => void,
-  setUserTwitter: (twitter: string) => void
+  setUserTwitter: (twitter: string) => void,
+  userNickname: string = ''
 ) => {
   const commands: Record<string, CommandResult> = {
     help: {
@@ -18,9 +19,13 @@ export const createCommands = (
     clear: {
       type: 'function',
       value: () => {
-        console.log('Clear command executed');
+        console.log('Clear command executed - resetting history');
+        const welcomeMessage = userNickname 
+          ? `Welcome ${userNickname.toUpperCase()} to Titan Terminal v1.0.0`
+          : 'Welcome to Titan Terminal v1.0.0';
+        
         setHistory([
-          'Welcome to Titan Terminal v1.0.0',
+          welcomeMessage,
           'Neural network interface initialized...',
           'Type "help" for available commands',
         ]);
