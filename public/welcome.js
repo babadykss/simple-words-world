@@ -26,20 +26,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       // Save user data via background script
-      const response = await new Promise((resolve) => {
+      const response = await new Promise((resolve, reject) => {
         chrome.runtime.sendMessage({
           action: 'saveUserData',
           nickname: nickname
-        }, resolve);
+        }, (response) => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve(response);
+          }
+        });
       });
 
       if (response && response.success) {
-        // Success - close welcome tab
+        // Show success message
+        showSuccess('Login successful! Opening extension...');
+        
+        // Close welcome tab after delay
         setTimeout(() => {
-          window.close();
-        }, 1000);
+          chrome.tabs.getCurrent((tab) => {
+            if (tab) {
+              chrome.tabs.remove(tab.id);
+            }
+          });
+        }, 1500);
       } else {
-        showError('Connection failed - try again');
+        showError(response?.error || 'Login failed - try again');
         setLoadingState(false);
       }
     } catch (error) {
@@ -72,6 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
     nicknameInput.classList.remove('error');
   }
 
+  function showSuccess(message) {
+    loadingMessage.textContent = message;
+    loadingMessage.style.display = 'block';
+    loadingMessage.style.color = '#00ff00';
+  }
+
   function setLoadingState(loading) {
     loginBtn.disabled = loading;
     nicknameInput.disabled = loading;
@@ -79,9 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loading) {
       loginBtn.textContent = 'Connecting...';
       loadingMessage.style.display = 'block';
+      loadingMessage.style.color = '#ffff00';
+      loadingMessage.textContent = 'Establishing connection...';
       hideError();
     } else {
-      loginBtn.textContent = 'Initialize Connection';
+      loginBtn.textContent = 'INITIALIZE';
       loadingMessage.style.display = 'none';
     }
   }

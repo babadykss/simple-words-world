@@ -18,6 +18,11 @@ chrome.action.onClicked.addListener(async () => {
     chrome.tabs.create({
       url: chrome.runtime.getURL('welcome.html')
     });
+  } else {
+    // User is logged in, open popup
+    chrome.action.setPopup({
+      popup: 'popup.html'
+    });
   }
 });
 
@@ -29,15 +34,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       userNickname: request.nickname,
       isLoggedIn: true,
       loginDate: new Date().toISOString()
-    }, () => {
+    }).then(() => {
+      // Enable popup after successful login
+      chrome.action.setPopup({
+        popup: 'popup.html'
+      });
       sendResponse({ success: true });
+    }).catch((error) => {
+      console.error('Error saving user data:', error);
+      sendResponse({ success: false, error: error.message });
     });
     return true; // Keep message channel open for async response
   }
   
   if (request.action === 'getUserData') {
-    chrome.storage.local.get(['userNickname', 'isLoggedIn'], (result) => {
+    chrome.storage.local.get(['userNickname', 'isLoggedIn']).then((result) => {
       sendResponse(result);
+    }).catch((error) => {
+      console.error('Error getting user data:', error);
+      sendResponse({ isLoggedIn: false });
     });
     return true;
   }

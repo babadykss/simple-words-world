@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Titan Terminal - Authentication</title>
+  <title>Titan Terminal - Initialize</title>
   <style>
     * {
       margin: 0;
@@ -13,8 +13,8 @@
     }
 
     body {
-      background: #000000;
-      color: #00ff00;
+      background: #111827;
+      color: #10b981;
       font-family: 'Courier New', monospace;
       height: 100vh;
       display: flex;
@@ -24,36 +24,35 @@
     }
 
     .auth-container {
-      background: #0a0a0a;
-      border: 2px solid #00ff00;
-      width: 500px;
-      padding: 60px 40px;
+      background: #000000;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      width: 400px;
+      padding: 40px 30px;
       text-align: center;
     }
 
     .system-header {
-      color: #00ff00;
-      font-size: 24px;
+      color: #10b981;
+      font-size: 18px;
       font-weight: bold;
-      letter-spacing: 2px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-transform: uppercase;
-    }
-
-    .version-info {
-      color: #666666;
-      font-size: 12px;
-      margin-bottom: 40px;
       letter-spacing: 1px;
     }
 
-    .status-line {
-      color: #00ff00;
-      font-size: 14px;
+    .version-info {
+      color: rgba(16, 185, 129, 0.6);
+      font-size: 11px;
       margin-bottom: 30px;
+      letter-spacing: 0.5px;
+    }
+
+    .status-line {
+      color: rgba(16, 185, 129, 0.8);
+      font-size: 12px;
+      margin-bottom: 25px;
       text-align: left;
-      border-left: 3px solid #00ff00;
-      padding-left: 15px;
+      line-height: 1.4;
     }
 
     .auth-form {
@@ -61,80 +60,81 @@
     }
 
     .input-group {
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     .input-label {
       display: block;
-      color: #00ff00;
-      font-size: 12px;
-      margin-bottom: 8px;
+      color: #10b981;
+      font-size: 11px;
+      margin-bottom: 6px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
     .input-field {
       width: 100%;
-      background: #000000;
-      border: 1px solid #00ff00;
-      color: #00ff00;
+      background: #111827;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
       font-family: 'Courier New', monospace;
-      font-size: 16px;
-      padding: 12px 15px;
+      font-size: 14px;
+      padding: 10px 12px;
       outline: none;
       transition: border-color 0.2s;
     }
 
     .input-field:focus {
-      border-color: #ffffff;
+      border-color: #10b981;
     }
 
     .input-field.error {
-      border-color: #ff0000;
+      border-color: #ef4444;
     }
 
     .login-btn {
       width: 100%;
-      background: #00ff00;
+      background: #10b981;
       color: #000000;
       border: none;
       font-family: 'Courier New', monospace;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 1px;
-      padding: 15px;
+      padding: 12px;
       cursor: pointer;
       transition: all 0.2s;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
-    .login-btn:hover {
-      background: #ffffff;
+    .login-btn:hover:not(:disabled) {
+      background: rgba(16, 185, 129, 0.8);
     }
 
     .login-btn:disabled {
-      background: #333333;
-      color: #666666;
+      background: rgba(16, 185, 129, 0.3);
+      color: rgba(0, 0, 0, 0.5);
       cursor: not-allowed;
     }
 
     .error-message {
-      color: #ff0000;
-      font-size: 11px;
-      margin-top: 8px;
+      color: #ef4444;
+      font-size: 10px;
+      margin-top: 6px;
       display: none;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
     .loading-message {
-      color: #ffff00;
-      font-size: 11px;
-      margin-top: 15px;
+      color: #eab308;
+      font-size: 10px;
+      margin-top: 12px;
       display: none;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      text-align: center;
     }
 
     .terminal-cursor {
@@ -150,36 +150,35 @@
 <body>
   <div class="auth-container">
     <div class="system-header">Titan Terminal</div>
-    <div class="version-info">System Version 1.0.0</div>
+    <div class="version-info">v1.0.0</div>
     
     <div class="status-line">
-      > Neural Core: ONLINE<br>
-      > Security Protocol: ACTIVE<br>
-      > Authentication Required<span class="terminal-cursor">_</span>
+      > System: ONLINE<br>
+      > Auth: REQUIRED<span class="terminal-cursor">_</span>
     </div>
     
     <form id="loginForm" class="auth-form">
       <div class="input-group">
-        <label class="input-label" for="nickname">Terminal Access Code:</label>
+        <label class="input-label" for="nickname">Username:</label>
         <input 
           type="text" 
           id="nickname" 
           class="input-field" 
-          placeholder="Enter username..."
+          placeholder="Enter username"
           maxlength="20"
           required
         />
         <div class="error-message" id="errorMessage">
-          Access Denied - Invalid Username
+          Invalid username
         </div>
       </div>
       
       <button type="submit" class="login-btn" id="loginBtn">
-        Initialize Connection
+        INITIALIZE
       </button>
       
       <div class="loading-message" id="loadingMessage">
-        Establishing Secure Connection...
+        Establishing connection...
       </div>
     </form>
   </div>
