@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { User, Award, Twitter, FileText, Zap, Star, Moon, Check } from 'lucide-react';
 
@@ -77,9 +76,6 @@ const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
                       {achievement.name}
                     </div>
                     <div className="text-xs text-gray-500">{achievement.description}</div>
-                    {achievement.unlocked && achievement.date && (
-                      <div className="text-xs text-green-400/50">{achievement.date}</div>
-                    )}
                   </div>
                 </div>
               ))}
