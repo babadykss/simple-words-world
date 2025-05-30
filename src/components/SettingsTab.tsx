@@ -1,13 +1,21 @@
 
 import React, { useState } from 'react';
 import { Volume2, Bell, Zap, Shield } from 'lucide-react';
+import { Slider } from './ui/slider';
 
 interface SettingsTabProps {
   soundEnabled?: boolean;
   onSoundChange?: (enabled: boolean) => void;
+  soundVolume?: number;
+  onVolumeChange?: (volume: number) => void;
 }
 
-const SettingsTab = ({ soundEnabled = true, onSoundChange }: SettingsTabProps) => {
+const SettingsTab = ({ 
+  soundEnabled = true, 
+  onSoundChange, 
+  soundVolume = 50,
+  onVolumeChange 
+}: SettingsTabProps) => {
   const [notifications, setNotifications] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [secureMode, setSecureMode] = useState(false);
@@ -21,21 +29,21 @@ const SettingsTab = ({ soundEnabled = true, onSoundChange }: SettingsTabProps) =
         </div>
         <button
           onClick={() => onChange(!enabled)}
-          className={`relative w-6 h-6 rounded-sm border transition-all duration-300 ease-in-out transform hover:scale-105 ${
+          className={`relative w-5 h-5 rounded border transition-all duration-300 ease-in-out transform hover:scale-105 ${
             enabled 
-              ? 'bg-green-500/30 border-green-500 shadow-lg shadow-green-500/30' 
+              ? 'bg-green-500/30 border-green-500 shadow-md shadow-green-500/20' 
               : 'bg-gray-700/50 border-gray-600 hover:border-gray-500'
           }`}
         >
           <div
-            className={`absolute inset-1 rounded-sm transition-all duration-300 ease-in-out ${
+            className={`absolute inset-0.5 rounded transition-all duration-300 ease-in-out ${
               enabled 
-                ? 'bg-green-400 shadow-sm shadow-green-400/50 scale-100 opacity-100' 
+                ? 'bg-green-400 shadow-sm shadow-green-400/30 scale-100 opacity-100' 
                 : 'bg-transparent scale-75 opacity-0'
             }`}
           />
           {enabled && (
-            <div className="absolute inset-0 bg-green-400/10 rounded-sm animate-pulse" />
+            <div className="absolute inset-0 bg-green-400/10 rounded animate-pulse" />
           )}
         </button>
       </div>
@@ -52,6 +60,23 @@ const SettingsTab = ({ soundEnabled = true, onSoundChange }: SettingsTabProps) =
         label="Sound Effects"
         icon={Volume2}
       />
+      
+      {soundEnabled && (
+        <div className="bg-gray-900/50 border border-green-500/20 rounded p-3 ml-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-green-400/80 text-xs">Volume</span>
+            <span className="text-green-400 text-xs">{soundVolume}%</span>
+          </div>
+          <Slider
+            value={[soundVolume]}
+            onValueChange={(value) => onVolumeChange?.(value[0])}
+            max={100}
+            min={0}
+            step={1}
+            className="w-full"
+          />
+        </div>
+      )}
       
       <ToggleSwitch
         enabled={notifications}

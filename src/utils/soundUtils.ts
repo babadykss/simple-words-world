@@ -2,6 +2,7 @@
 class SoundManager {
   private audioContext: AudioContext | null = null;
   private enabled: boolean = true;
+  private volume: number = 0.5; // Default 50%
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -13,13 +14,18 @@ class SoundManager {
     this.enabled = enabled;
   }
 
+  setVolume(volume: number) {
+    // Convert percentage to decimal (0-1)
+    this.volume = Math.max(0, Math.min(1, volume / 100));
+  }
+
   private async resumeContext() {
     if (this.audioContext && this.audioContext.state === 'suspended') {
       await this.audioContext.resume();
     }
   }
 
-  private playTone(frequency: number, duration: number, type: OscillatorType = 'sine', volume: number = 0.1) {
+  private playTone(frequency: number, duration: number, type: OscillatorType = 'sine', baseVolume: number = 0.1) {
     if (!this.enabled || !this.audioContext) return;
 
     this.resumeContext().then(() => {
@@ -32,8 +38,11 @@ class SoundManager {
       oscillator.frequency.setValueAtTime(frequency, this.audioContext!.currentTime);
       oscillator.type = type;
 
+      // Apply volume multiplier
+      const adjustedVolume = baseVolume * this.volume;
+
       gainNode.gain.setValueAtTime(0, this.audioContext!.currentTime);
-      gainNode.gain.linearRampToValueAtTime(volume, this.audioContext!.currentTime + 0.01);
+      gainNode.gain.linearRampToValueAtTime(adjustedVolume, this.audioContext!.currentTime + 0.01);
       gainNode.gain.linearRampToValueAtTime(0, this.audioContext!.currentTime + duration);
 
       oscillator.start(this.audioContext!.currentTime);

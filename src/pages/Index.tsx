@@ -25,10 +25,15 @@ const Index = () => {
   const [userBio, setUserBio] = useState('');
   const [userTwitter, setUserTwitter] = useState('');
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [soundVolume, setSoundVolume] = useState(50);
 
   useEffect(() => {
     soundManager.setEnabled(soundEnabled);
   }, [soundEnabled]);
+
+  useEffect(() => {
+    soundManager.setVolume(soundVolume);
+  }, [soundVolume]);
 
   const commands = createCommands(setHistory, setActiveTab, setUserBio, setUserTwitter);
 
@@ -67,7 +72,14 @@ const Index = () => {
       case 'dashboard':
         return <DashboardTab />;
       case 'settings':
-        return <SettingsTab soundEnabled={soundEnabled} onSoundChange={setSoundEnabled} />;
+        return (
+          <SettingsTab 
+            soundEnabled={soundEnabled} 
+            onSoundChange={setSoundEnabled}
+            soundVolume={soundVolume}
+            onVolumeChange={setSoundVolume}
+          />
+        );
       default:
         return (
           <>
