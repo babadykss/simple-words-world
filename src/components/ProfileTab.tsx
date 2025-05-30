@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User, Award, Twitter, FileText, Check, Crown, Shield } from 'lucide-react';
 import { getUserUID } from '../utils/userUtils';
@@ -6,6 +5,22 @@ import { getUserUID } from '../utils/userUtils';
 interface ProfileTabProps {
   userBio?: string;
   userTwitter?: string;
+}
+
+interface ChromeResponse {
+  userNickname?: string;
+  isLoggedIn?: boolean;
+}
+
+// Declare global chrome types for extension environment
+declare global {
+  interface Window {
+    chrome?: {
+      runtime?: {
+        sendMessage: (message: any, callback: (response: any) => void) => void;
+      };
+    };
+  }
 }
 
 const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
@@ -18,9 +33,9 @@ const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        if (typeof chrome !== 'undefined' && chrome.runtime) {
-          const response = await new Promise((resolve) => {
-            chrome.runtime.sendMessage({ action: 'getUserData' }, resolve);
+        if (typeof window !== 'undefined' && window.chrome && window.chrome.runtime) {
+          const response = await new Promise<ChromeResponse>((resolve) => {
+            window.chrome!.runtime!.sendMessage({ action: 'getUserData' }, resolve);
           });
           
           if (response && response.userNickname) {
