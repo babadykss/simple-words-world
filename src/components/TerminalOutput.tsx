@@ -15,20 +15,38 @@ const TerminalOutput = ({ history, isProcessing }: TerminalOutputProps) => {
     }
   }, [history]);
 
+  const formatLine = (line: string, index: number) => {
+    if (line.includes('Welcome to Titan Terminal v1.0.0')) {
+      return (
+        <div key={index} className="mb-1">
+          <span className="text-green-300 font-bold bg-green-900/30 px-2 py-1 rounded border border-green-500/30">
+            {line}
+          </span>
+        </div>
+      );
+    }
+    
+    if (line.startsWith('$')) {
+      return (
+        <div key={index} className="mb-1">
+          <span className="text-green-300">{line}</span>
+        </div>
+      );
+    }
+    
+    return (
+      <div key={index} className="mb-1">
+        <span className="text-green-400/80">{line}</span>
+      </div>
+    );
+  };
+
   return (
     <div 
       ref={terminalRef}
       className="flex-1 p-3 bg-black text-green-400 text-xs leading-relaxed overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-green-500/30"
     >
-      {history.map((line, index) => (
-        <div key={index} className="mb-1">
-          {line.startsWith('$') ? (
-            <span className="text-green-300">{line}</span>
-          ) : (
-            <span className="text-green-400/80">{line}</span>
-          )}
-        </div>
-      ))}
+      {history.map((line, index) => formatLine(line, index))}
       {isProcessing && (
         <div className="flex items-center gap-2 text-green-300">
           <span>Processing</span>

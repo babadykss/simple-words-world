@@ -5,7 +5,7 @@ export interface CommandResult {
 }
 
 export const createCommands = (
-  setHistory: (history: string[]) => void,
+  setHistory: (history: string[] | ((prev: string[]) => string[])) => void,
   setActiveTab: (tab: string) => void,
   setUserBio: (bio: string) => void,
   setUserTwitter: (twitter: string) => void
