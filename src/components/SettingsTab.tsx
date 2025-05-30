@@ -1,16 +1,12 @@
 
 import React, { useState } from 'react';
 import { Volume2, Bell, Zap, Shield } from 'lucide-react';
-import { Slider } from '@/components/ui/slider';
 
 const SettingsTab = () => {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [notifications, setNotifications] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [secureMode, setSecureMode] = useState(false);
-  const [soundVolume, setSoundVolume] = useState([75]);
-  const [refreshRate, setRefreshRate] = useState([30]);
-  const [securityLevel, setSecurityLevel] = useState([85]);
 
   const ToggleSwitch = ({ enabled, onChange, label, icon: Icon }: any) => (
     <div className="bg-gray-900/50 border border-green-500/20 rounded p-3">
@@ -21,35 +17,21 @@ const SettingsTab = () => {
         </div>
         <button
           onClick={() => onChange(!enabled)}
-          className={`w-8 h-4 rounded-full transition-colors ${
-            enabled ? 'bg-green-500' : 'bg-gray-600'
+          className={`w-10 h-6 rounded-sm border-2 transition-all duration-200 ${
+            enabled 
+              ? 'bg-green-500/20 border-green-500 shadow-lg shadow-green-500/20' 
+              : 'bg-gray-700/50 border-gray-600'
           }`}
         >
           <div
-            className={`w-3 h-3 bg-white rounded-full transition-transform ${
-              enabled ? 'translate-x-4' : 'translate-x-0.5'
+            className={`w-4 h-4 rounded-sm transition-all duration-200 ${
+              enabled 
+                ? 'translate-x-4 bg-green-400 shadow-md shadow-green-400/50' 
+                : 'translate-x-0 bg-gray-500'
             }`}
           />
         </button>
       </div>
-    </div>
-  );
-
-  const SliderControl = ({ value, onChange, label, icon: Icon, unit, min = 0, max = 100 }: any) => (
-    <div className="bg-gray-900/50 border border-green-500/20 rounded p-3">
-      <div className="flex items-center gap-2 mb-3">
-        <Icon className="w-4 h-4 text-green-400" />
-        <span className="text-green-400 text-sm">{label}</span>
-        <span className="text-green-400/70 text-xs ml-auto">{value[0]}{unit}</span>
-      </div>
-      <Slider
-        value={value}
-        onValueChange={onChange}
-        max={max}
-        min={min}
-        step={1}
-        className="w-full"
-      />
     </div>
   );
 
@@ -63,16 +45,6 @@ const SettingsTab = () => {
         label="Sound Effects"
         icon={Volume2}
       />
-
-      {soundEnabled && (
-        <SliderControl
-          value={soundVolume}
-          onChange={setSoundVolume}
-          label="Volume Level"
-          icon={Volume2}
-          unit="%"
-        />
-      )}
       
       <ToggleSwitch
         enabled={notifications}
@@ -87,18 +59,6 @@ const SettingsTab = () => {
         label="Auto Refresh"
         icon={Zap}
       />
-
-      {autoRefresh && (
-        <SliderControl
-          value={refreshRate}
-          onChange={setRefreshRate}
-          label="Refresh Rate"
-          icon={Zap}
-          unit="s"
-          min={5}
-          max={120}
-        />
-      )}
       
       <ToggleSwitch
         enabled={secureMode}
@@ -106,16 +66,6 @@ const SettingsTab = () => {
         label="Secure Mode"
         icon={Shield}
       />
-
-      {secureMode && (
-        <SliderControl
-          value={securityLevel}
-          onChange={setSecurityLevel}
-          label="Security Level"
-          icon={Shield}
-          unit="%"
-        />
-      )}
 
       <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded">
         <div className="text-green-400 text-xs mb-2">Neural Network Status</div>
