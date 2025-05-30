@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, Zap, Code, Activity } from 'lucide-react';
 import TerminalTabs from '../components/TerminalTabs';
-import CryptoTab from '../components/CryptoTab';
+import ProfileTab from '../components/ProfileTab';
 import DashboardTab from '../components/DashboardTab';
 import SettingsTab from '../components/SettingsTab';
 
@@ -18,13 +17,13 @@ const Index = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const commands = {
-    help: 'Available commands: help, clear, status, neural, scan, deploy, crypto, dashboard',
+    help: 'Available commands: help, clear, status, neural, scan, deploy, profile, dashboard',
     clear: () => setHistory([]),
     status: 'System: Online | Neural Core: Active | Memory: 2.4GB/4GB',
     neural: 'Neural network processing... [████████████] 100%',
     scan: 'Scanning network... Found 3 active nodes',
     deploy: 'Deploying to production... ✓ Success',
-    crypto: () => setActiveTab('crypto'),
+    profile: () => setActiveTab('profile'),
     dashboard: () => setActiveTab('dashboard'),
   };
 
@@ -61,8 +60,8 @@ const Index = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'crypto':
-        return <CryptoTab />;
+      case 'profile':
+        return <ProfileTab />;
       case 'dashboard':
         return <DashboardTab />;
       case 'settings':

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Terminal, TrendingUp, Settings, LayoutDashboard } from 'lucide-react';
+import { Terminal, User, Settings, LayoutDashboard } from 'lucide-react';
 
 interface TerminalTabsProps {
   activeTab: string;
@@ -10,7 +10,7 @@ interface TerminalTabsProps {
 const TerminalTabs = ({ activeTab, onTabChange }: TerminalTabsProps) => {
   const tabs = [
     { id: 'terminal', label: 'Terminal', icon: Terminal },
-    { id: 'crypto', label: 'Crypto', icon: TrendingUp },
+    { id: 'profile', label: 'Profile', icon: User },
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];

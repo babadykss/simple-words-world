@@ -1,8 +1,17 @@
 
-import React from 'react';
-import { Wallet, Image, Activity } from 'lucide-react';
+import React, { useState } from 'react';
+import { Wallet, Image, Activity, Search, TrendingUp, TrendingDown } from 'lucide-react';
 
 const DashboardTab = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showRestriction, setShowRestriction] = useState(false);
+
+  const cryptoData = [
+    { symbol: 'BTC', name: 'Bitcoin', price: '$43,250.00', change: '+2.45%', isUp: true },
+    { symbol: 'ETH', name: 'Ethereum', price: '$2,680.50', change: '+1.82%', isUp: true },
+    { symbol: 'SOL', name: 'Solana', price: '$98.75', change: '-0.65%', isUp: false },
+  ];
+
   const walletData = [
     { network: 'Ethereum', balance: '2.45 ETH', usd: '$6,567.23' },
     { network: 'Solana', balance: '125.30 SOL', usd: '$12,373.48' },
@@ -21,8 +30,64 @@ const DashboardTab = () => {
     { action: 'Swapped', amount: '0.01 BTC', time: '1h ago', network: 'BTC' },
   ];
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const query = searchQuery.toLowerCase();
+    if (query.includes('sol') || query.includes('eth') || query.includes('btc')) {
+      setShowRestriction(true);
+      setTimeout(() => setShowRestriction(false), 3000);
+    }
+  };
+
   return (
     <div className="p-3 space-y-4">
+      {/* Search Bar */}
+      <div className="bg-gray-900/50 border border-green-500/20 rounded p-3">
+        <form onSubmit={handleSearch} className="flex items-center gap-2">
+          <Search className="w-4 h-4 text-green-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search tokens (BTC, ETH, SOL...)"
+            className="flex-1 bg-transparent text-green-400 text-xs outline-none placeholder-green-400/50"
+          />
+        </form>
+        {showRestriction && (
+          <div className="mt-2 p-2 bg-red-500/10 border border-red-500/30 rounded">
+            <div className="text-red-400 text-xs">Only for Dark Titan Users</div>
+          </div>
+        )}
+      </div>
+
+      {/* Crypto Prices */}
+      <div>
+        <div className="text-green-400 text-sm font-semibold mb-2">Live Crypto Prices</div>
+        <div className="space-y-2">
+          {cryptoData.map((crypto) => (
+            <div key={crypto.symbol} className="bg-gray-900/50 border border-green-500/20 rounded p-2">
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-400 font-semibold text-xs">{crypto.symbol}</span>
+                  <span className="text-green-400/70 text-xs">{crypto.name}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {crypto.isUp ? (
+                    <TrendingUp className="w-3 h-3 text-green-400" />
+                  ) : (
+                    <TrendingDown className="w-3 h-3 text-red-400" />
+                  )}
+                  <span className={`text-xs ${crypto.isUp ? 'text-green-400' : 'text-red-400'}`}>
+                    {crypto.change}
+                  </span>
+                </div>
+              </div>
+              <div className="text-green-300 font-mono text-xs">{crypto.price}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Balances */}
       <div>
         <div className="flex items-center gap-2 text-green-400 text-sm font-semibold mb-2">
