@@ -21,107 +21,41 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      position: relative;
-    }
-
-    /* Animated grid background */
-    .grid-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px);
-      background-size: 50px 50px;
-      animation: gridMove 20s linear infinite;
-      opacity: 0.3;
-    }
-
-    @keyframes gridMove {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(50px, 50px); }
-    }
-
-    /* Floating particles */
-    .particle {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: #10b981;
-      border-radius: 50%;
-      animation: float 6s ease-in-out infinite;
-    }
-
-    .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-    .particle:nth-child(2) { top: 60%; left: 20%; animation-delay: 1s; }
-    .particle:nth-child(3) { top: 30%; left: 80%; animation-delay: 2s; }
-    .particle:nth-child(4) { top: 80%; left: 70%; animation-delay: 3s; }
-    .particle:nth-child(5) { top: 10%; left: 60%; animation-delay: 4s; }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) scale(1); opacity: 0.7; }
-      50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
-    }
-
-    /* Scanning line effect */
-    .scan-line {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #10b981, transparent);
-      animation: scan 3s ease-in-out infinite;
-      opacity: 0.8;
-    }
-
-    @keyframes scan {
-      0% { transform: translateY(0vh); }
-      100% { transform: translateY(100vh); }
     }
 
     .auth-container {
       background: rgba(0, 0, 0, 0.9);
       border: 1px solid rgba(16, 185, 129, 0.4);
-      width: 420px;
-      padding: 40px 35px;
+      width: 320px;
+      padding: 24px;
       text-align: center;
-      position: relative;
-      z-index: 10;
       backdrop-filter: blur(10px);
-      box-shadow: 
-        0 0 30px rgba(16, 185, 129, 0.2),
-        inset 0 0 20px rgba(16, 185, 129, 0.05);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
     }
 
     .system-header {
       color: #10b981;
-      font-size: 20px;
+      font-size: 16px;
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+      letter-spacing: 1px;
     }
 
     .version-info {
       color: rgba(16, 185, 129, 0.7);
-      font-size: 11px;
-      margin-bottom: 35px;
-      letter-spacing: 1px;
+      font-size: 10px;
+      margin-bottom: 20px;
     }
 
     .status-line {
       color: rgba(16, 185, 129, 0.9);
-      font-size: 12px;
-      margin-bottom: 30px;
+      font-size: 11px;
+      margin-bottom: 20px;
       text-align: left;
-      line-height: 1.6;
       background: rgba(16, 185, 129, 0.05);
-      padding: 15px;
-      border-left: 3px solid rgba(16, 185, 129, 0.3);
+      padding: 12px;
+      border-left: 2px solid rgba(16, 185, 129, 0.3);
     }
 
     .auth-form {
@@ -129,16 +63,15 @@
     }
 
     .input-group {
-      margin-bottom: 25px;
+      margin-bottom: 16px;
     }
 
     .input-label {
       display: block;
       color: #10b981;
-      font-size: 11px;
-      margin-bottom: 8px;
+      font-size: 10px;
+      margin-bottom: 6px;
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
     .input-field {
@@ -147,22 +80,19 @@
       border: 1px solid rgba(16, 185, 129, 0.3);
       color: #10b981;
       font-family: 'Courier New', monospace;
-      font-size: 14px;
-      padding: 12px 15px;
+      font-size: 12px;
+      padding: 8px 10px;
       outline: none;
       transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
     }
 
     .input-field:focus {
       border-color: #10b981;
-      box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-      background: rgba(17, 24, 39, 0.9);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
     }
 
     .input-field.error {
       border-color: #ef4444;
-      box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
     }
 
     .login-btn {
@@ -171,62 +101,41 @@
       color: #000000;
       border: none;
       font-family: 'Courier New', monospace;
-      font-size: 12px;
+      font-size: 10px;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
-      padding: 15px;
+      letter-spacing: 1px;
+      padding: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-top: 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .login-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s;
-    }
-
-    .login-btn:hover:not(:disabled)::before {
-      left: 100%;
+      margin-top: 12px;
     }
 
     .login-btn:hover:not(:disabled) {
       background: linear-gradient(45deg, #059669, #047857);
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
     }
 
     .login-btn:disabled {
       background: rgba(16, 185, 129, 0.3);
       color: rgba(0, 0, 0, 0.5);
       cursor: not-allowed;
-      transform: none;
     }
 
     .error-message {
       color: #ef4444;
-      font-size: 10px;
-      margin-top: 8px;
+      font-size: 9px;
+      margin-top: 6px;
       display: none;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .loading-message {
       color: #eab308;
-      font-size: 10px;
-      margin-top: 15px;
+      font-size: 9px;
+      margin-top: 10px;
       display: none;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
       text-align: center;
     }
 
@@ -238,61 +147,10 @@
       0%, 50% { opacity: 1; }
       51%, 100% { opacity: 0; }
     }
-
-    /* Corner decorations */
-    .corner-decoration {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .corner-decoration.top-left {
-      top: 10px;
-      left: 10px;
-      border-right: none;
-      border-bottom: none;
-    }
-
-    .corner-decoration.top-right {
-      top: 10px;
-      right: 10px;
-      border-left: none;
-      border-bottom: none;
-    }
-
-    .corner-decoration.bottom-left {
-      bottom: 10px;
-      left: 10px;
-      border-right: none;
-      border-top: none;
-    }
-
-    .corner-decoration.bottom-right {
-      bottom: 10px;
-      right: 10px;
-      border-left: none;
-      border-top: none;
-    }
   </style>
 </head>
 <body>
-  <div class="grid-background"></div>
-  <div class="scan-line"></div>
-  
-  <!-- Floating particles -->
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
-
   <div class="auth-container">
-    <div class="corner-decoration top-left"></div>
-    <div class="corner-decoration top-right"></div>
-    <div class="corner-decoration bottom-left"></div>
-    <div class="corner-decoration bottom-right"></div>
-
     <div class="system-header">Titan Terminal</div>
     <div class="version-info">Neural Interface v1.0.0</div>
     

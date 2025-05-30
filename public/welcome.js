@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   const nicknameInput = document.getElementById('nickname');
@@ -24,35 +25,47 @@ document.addEventListener('DOMContentLoaded', () => {
     setLoadingState(true);
 
     try {
-      // Save user data via background script
-      const response = await new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage({
-          action: 'saveUserData',
-          nickname: nickname
-        }, (response) => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve(response);
-          }
-        });
-      });
-
-      if (response && response.success) {
-        // Show success message
-        showSuccess('Neural link established! Opening terminal...');
-        
-        // Close welcome tab after delay
-        setTimeout(() => {
-          chrome.tabs.getCurrent((tab) => {
-            if (tab) {
-              chrome.tabs.remove(tab.id);
+      // Check if we're in extension environment
+      if (typeof chrome !== 'undefined' && chrome.runtime) {
+        // Save user data via background script
+        const response = await new Promise((resolve, reject) => {
+          chrome.runtime.sendMessage({
+            action: 'saveUserData',
+            nickname: nickname
+          }, (response) => {
+            if (chrome.runtime.lastError) {
+              reject(chrome.runtime.lastError);
+            } else {
+              resolve(response);
             }
           });
-        }, 1500);
+        });
+
+        if (response && response.success) {
+          // Show success message
+          showSuccess('Neural link established! Opening terminal...');
+          
+          // Close welcome tab after delay
+          setTimeout(() => {
+            if (chrome.tabs) {
+              chrome.tabs.getCurrent((tab) => {
+                if (tab) {
+                  chrome.tabs.remove(tab.id);
+                }
+              });
+            }
+          }, 1500);
+        } else {
+          showError(response?.error || 'Neural link failed - try again');
+          setLoadingState(false);
+        }
       } else {
-        showError(response?.error || 'Neural link failed - try again');
-        setLoadingState(false);
+        // Fallback for non-extension environment
+        localStorage.setItem('userNickname', nickname);
+        showSuccess('Neural link established! Redirecting...');
+        setTimeout(() => {
+          window.location.href = 'popup.html';
+        }, 1500);
       }
     } catch (error) {
       console.error('Error saving user data:', error);

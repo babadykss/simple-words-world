@@ -16,10 +16,10 @@ const TerminalOutput = ({ history, isProcessing }: TerminalOutputProps) => {
   }, [history]);
 
   const formatLine = (line: string, index: number) => {
-    if (line.includes('Welcome to Titan Terminal v1.0.0')) {
+    if (line.includes('Welcome') && line.includes('to Titan Terminal v1.0.0')) {
       return (
         <div key={index} className="mb-1">
-          <span className="text-green-300 font-bold px-3 py-1 rounded border animate-pulse welcome-banner">
+          <span className="text-green-300 font-bold px-3 py-1 rounded border border-green-500/60 animate-pulse welcome-banner">
             {line}
           </span>
         </div>
