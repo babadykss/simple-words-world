@@ -18,6 +18,7 @@ export const createCommands = (
     clear: {
       type: 'function',
       value: () => {
+        console.log('Clear command executed');
         setHistory([
           'Welcome to Titan Terminal v1.0.0',
           'Neural network interface initialized...',
@@ -75,6 +76,7 @@ export const executeCommand = (
   args: string[],
   commands: Record<string, CommandResult>
 ): string | null => {
+  console.log('Executing command:', command, 'with args:', args);
   const cmd = commands[command];
   if (!cmd) {
     return `Command not found: ${command}`;

@@ -19,7 +19,7 @@ const TerminalOutput = ({ history, isProcessing }: TerminalOutputProps) => {
     if (line.includes('Welcome to Titan Terminal v1.0.0')) {
       return (
         <div key={index} className="mb-1">
-          <span className="text-green-300 font-bold bg-gradient-to-r from-green-900/40 via-cyan-900/40 to-green-900/40 px-3 py-2 rounded-lg border-2 border-green-500/50 shadow-lg animate-pulse bg-[length:200%_100%] animate-[gradient_3s_ease-in-out_infinite]">
+          <span className="text-green-300 font-bold px-3 py-1 rounded border animate-pulse welcome-banner">
             {line}
           </span>
         </div>
@@ -46,13 +46,27 @@ const TerminalOutput = ({ history, isProcessing }: TerminalOutputProps) => {
       ref={terminalRef}
       className="flex-1 p-3 bg-black text-green-400 text-xs leading-relaxed overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-green-500/30"
     >
-      <style jsx>{`
-        @keyframes gradient {
-          0%, 100% {
-            background-position: 0% 50%;
+      <style>{`
+        .welcome-banner {
+          background: linear-gradient(90deg, 
+            rgba(34, 197, 94, 0.2) 0%, 
+            rgba(6, 182, 212, 0.3) 25%, 
+            rgba(168, 85, 247, 0.2) 50%, 
+            rgba(6, 182, 212, 0.3) 75%, 
+            rgba(34, 197, 94, 0.2) 100%
+          );
+          background-size: 200% 100%;
+          border: 1px solid rgba(34, 197, 94, 0.6);
+          box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+          animation: shimmer 2s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+          0% {
+            background-position: -200% 0;
           }
-          50% {
-            background-position: 100% 50%;
+          100% {
+            background-position: 200% 0;
           }
         }
       `}</style>
