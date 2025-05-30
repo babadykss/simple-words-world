@@ -1,16 +1,70 @@
 
-import React, { useState } from 'react';
-import { Image, Activity, Search, TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Image, Activity, Search, TrendingUp, TrendingDown, BarChart3, Shield } from 'lucide-react';
+
+interface CryptoData {
+  symbol: string;
+  name: string;
+  price: string;
+  change: string;
+  isUp: boolean;
+}
 
 const DashboardTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showRestriction, setShowRestriction] = useState(false);
-
-  const cryptoData = [
+  const [cryptoData, setCryptoData] = useState<CryptoData[]>([
     { symbol: 'BTC', name: 'Bitcoin', price: '$43,250.00', change: '+2.45%', isUp: true },
     { symbol: 'ETH', name: 'Ethereum', price: '$2,680.50', change: '+1.82%', isUp: true },
     { symbol: 'SOL', name: 'Solana', price: '$98.75', change: '-0.65%', isUp: false },
-  ];
+  ]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchCryptoPrices = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true'
+      );
+      const data = await response.json();
+      
+      const updatedData: CryptoData[] = [
+        {
+          symbol: 'BTC',
+          name: 'Bitcoin',
+          price: `$${data.bitcoin.usd.toLocaleString()}`,
+          change: `${data.bitcoin.usd_24h_change > 0 ? '+' : ''}${data.bitcoin.usd_24h_change.toFixed(2)}%`,
+          isUp: data.bitcoin.usd_24h_change > 0
+        },
+        {
+          symbol: 'ETH',
+          name: 'Ethereum',
+          price: `$${data.ethereum.usd.toLocaleString()}`,
+          change: `${data.ethereum.usd_24h_change > 0 ? '+' : ''}${data.ethereum.usd_24h_change.toFixed(2)}%`,
+          isUp: data.ethereum.usd_24h_change > 0
+        },
+        {
+          symbol: 'SOL',
+          name: 'Solana',
+          price: `$${data.solana.usd.toLocaleString()}`,
+          change: `${data.solana.usd_24h_change > 0 ? '+' : ''}${data.solana.usd_24h_change.toFixed(2)}%`,
+          isUp: data.solana.usd_24h_change > 0
+        }
+      ];
+      
+      setCryptoData(updatedData);
+    } catch (error) {
+      console.error('Failed to fetch crypto prices:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCryptoPrices();
+    const interval = setInterval(fetchCryptoPrices, 60000); // Update every minute
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +99,10 @@ const DashboardTab = () => {
         </form>
         {showRestriction && (
           <div className="mt-2 p-3 bg-red-500/10 border border-red-500/30 rounded">
-            <div className="text-red-400 text-sm font-semibold mb-1">⚠️ Only for Dark Users</div>
+            <div className="flex items-center gap-2 text-red-400 text-sm font-semibold mb-1">
+              <Shield className="w-4 h-4" />
+              Only for Dark Users
+            </div>
             <div className="text-red-300 text-xs mb-2">This feature requires Dark access level</div>
             <div className="text-green-400 text-xs font-mono bg-black/30 p-1 rounded">
               Premium Feature Locked
@@ -56,7 +113,12 @@ const DashboardTab = () => {
 
       {/* Crypto Prices */}
       <div>
-        <div className="text-green-400 text-sm font-semibold mb-2">Live Crypto Prices</div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-green-400 text-sm font-semibold">Live Crypto Prices</div>
+          {isLoading && (
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          )}
+        </div>
         <div className="space-y-2">
           {cryptoData.map((crypto) => (
             <div key={crypto.symbol} className="bg-gray-900/50 border border-green-500/20 rounded p-2">
