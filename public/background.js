@@ -1,5 +1,10 @@
 
 // Background script for extension installation handling
+
+// URL and model name for Titan AI API
+const TITAN_URL = 'http://localhost:11434/api/chat';
+const TITAN_MODEL = 'titan-assistant'; // Замените на реальное имя модели, установленной в Ollama
+
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
     // Open welcome page in new tab when extension is first installed
@@ -57,15 +62,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 
-  // Handle Ollama API requests
-  if (request.action === 'sendToOllama') {
-    fetch('http://localhost:11434/api/chat', {
+  // Handle Titan AI requests
+  if (request.action === 'sendToTitan') {
+    fetch(TITAN_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama2',
+        model: TITAN_MODEL,
         messages: [
           {
             role: 'user',
@@ -88,11 +93,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     })
     .catch(error => {
-      console.error('Ошибка при обращении к Ollama:', error);
+      console.error('Ошибка при обращении к Titan:', error);
       let errorMessage = 'Ошибка AI: неизвестная ошибка';
       
       if (error.name === 'TypeError') {
-        errorMessage = 'Ошибка: не удается подключиться к AI серверу (проверь что Ollama запущен)';
+        errorMessage = 'Ошибка: не удаётся подключиться к AI серверу (проверьте, что Ollama запущен)';
       } else {
         errorMessage = `Ошибка AI: ${error.message}`;
       }

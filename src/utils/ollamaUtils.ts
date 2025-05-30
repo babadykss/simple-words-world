@@ -7,7 +7,7 @@ export const sendToOllama = async (message: string): Promise<string> => {
       return new Promise((resolve) => {
         (window as any).chrome.runtime.sendMessage(
           { 
-            action: 'sendToOllama', 
+            action: 'sendToTitan', 
             message: message 
           },
           (response: any) => {
@@ -27,7 +27,7 @@ export const sendToOllama = async (message: string): Promise<string> => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'llama2',
+          model: 'titan-assistant',
           messages: [
             {
               role: 'user',
@@ -46,7 +46,7 @@ export const sendToOllama = async (message: string): Promise<string> => {
       return data.message?.content || 'AI не ответил';
     }
   } catch (error) {
-    console.error('Ошибка при обращении к Ollama:', error);
+    console.error('Ошибка при обращении к Titan:', error);
     if (error instanceof Error && error.name === 'TypeError') {
       return 'Ошибка: не удается подключиться к AI серверу (проверь что Ollama запущен)';
     }
