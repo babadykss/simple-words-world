@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, Zap, Code, Activity, ChevronDown } from 'lucide-react';
 import TerminalTabs from '../components/TerminalTabs';
@@ -62,6 +61,7 @@ const Index = () => {
           newHistory.push(response);
         } else {
           result();
+          setHistory(newHistory);
           setInput('');
           return;
         }
