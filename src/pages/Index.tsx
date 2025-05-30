@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import TerminalTabs from '../components/TerminalTabs';
 import ProfileTab from '../components/ProfileTab';
@@ -10,6 +11,19 @@ import TerminalInput from '../components/TerminalInput';
 import StatusBar from '../components/StatusBar';
 import { createCommands, executeCommand } from '../utils/terminalCommands';
 import { soundManager } from '../utils/soundUtils';
+
+// Declare global chrome types for extension environment
+declare global {
+  interface Window {
+    chrome?: {
+      storage?: {
+        local?: {
+          get: (keys: string[]) => Promise<any>;
+        };
+      };
+    };
+  }
+}
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('terminal');
@@ -27,19 +41,28 @@ const Index = () => {
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        const result = await chrome.storage.local.get(['userNickname']);
-        const nickname = result.userNickname || '';
-        setUserNickname(nickname);
-        
-        const welcomeMessage = nickname 
-          ? `Welcome ${nickname.toUpperCase()} to Titan Terminal v1.0.0`
-          : 'Welcome to Titan Terminal v1.0.0';
-        
-        setHistory([
-          welcomeMessage,
-          'Neural network interface initialized...',
-          'Type "help" for available commands',
-        ]);
+        if (typeof window !== 'undefined' && window.chrome && window.chrome.storage) {
+          const result = await window.chrome.storage.local!.get(['userNickname']);
+          const nickname = result.userNickname || '';
+          setUserNickname(nickname);
+          
+          const welcomeMessage = nickname 
+            ? `Welcome ${nickname.toUpperCase()} to Titan Terminal v1.0.0`
+            : 'Welcome to Titan Terminal v1.0.0';
+          
+          setHistory([
+            welcomeMessage,
+            'Neural network interface initialized...',
+            'Type "help" for available commands',
+          ]);
+        } else {
+          // Fallback for non-extension environment
+          setHistory([
+            'Welcome to Titan Terminal v1.0.0',
+            'Neural network interface initialized...',
+            'Type "help" for available commands',
+          ]);
+        }
       } catch (error) {
         console.error('Error loading user data:', error);
         setHistory([
