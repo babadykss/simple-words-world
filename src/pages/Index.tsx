@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Terminal, Zap, Code, Activity } from 'lucide-react';
+import { Terminal, Zap, Code, Activity, ChevronDown } from 'lucide-react';
 import TerminalTabs from '../components/TerminalTabs';
 import ProfileTab from '../components/ProfileTab';
 import DashboardTab from '../components/DashboardTab';
@@ -14,10 +15,13 @@ const Index = () => {
     'Type "help" for available commands',
   ]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showCoreMenu, setShowCoreMenu] = useState(false);
+  const [userBio, setUserBio] = useState('Neural network enthusiast exploring the depths of blockchain technology. Building the future one transaction at a time. 🚀');
+  const [userTwitter, setUserTwitter] = useState('@crypto_titan_2024');
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const commands = {
-    help: 'Available commands: help, clear, status, neural, scan, deploy, profile, dashboard',
+    help: 'Available commands: help, clear, status, neural, scan, deploy, profile, dashboard, setbio, settwitter',
     clear: () => setHistory([]),
     status: 'System: Online | Neural Core: Active | Memory: 2.4GB/4GB',
     neural: 'Neural network processing... [████████████] 100%',
@@ -25,6 +29,16 @@ const Index = () => {
     deploy: 'Deploying to production... ✓ Success',
     profile: () => setActiveTab('profile'),
     dashboard: () => setActiveTab('dashboard'),
+    setbio: (args: string) => {
+      const newBio = args || 'No bio provided';
+      setUserBio(newBio);
+      return `Bio updated: ${newBio}`;
+    },
+    settwitter: (args: string) => {
+      const newTwitter = args.startsWith('@') ? args : `@${args}`;
+      setUserTwitter(newTwitter);
+      return `Twitter updated: ${newTwitter}`;
+    },
   };
 
   useEffect(() => {
@@ -38,17 +52,24 @@ const Index = () => {
     if (!input.trim()) return;
 
     const newHistory = [...history, `$ ${input}`];
+    const [command, ...args] = input.split(' ');
     
-    if (commands[input as keyof typeof commands]) {
-      const result = commands[input as keyof typeof commands];
+    if (commands[command as keyof typeof commands]) {
+      const result = commands[command as keyof typeof commands];
       if (typeof result === 'function') {
-        result();
-        setInput('');
-        return;
+        if (command === 'setbio' || command === 'settwitter') {
+          const response = result(args.join(' '));
+          newHistory.push(response);
+        } else {
+          result();
+          setInput('');
+          return;
+        }
+      } else {
+        newHistory.push(result);
       }
-      newHistory.push(result);
     } else {
-      newHistory.push(`Command not found: ${input}`);
+      newHistory.push(`Command not found: ${command}`);
     }
 
     setHistory(newHistory);
@@ -61,7 +82,7 @@ const Index = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'profile':
-        return <ProfileTab />;
+        return <ProfileTab userBio={userBio} userTwitter={userTwitter} />;
       case 'dashboard':
         return <DashboardTab />;
       case 'settings':
@@ -130,11 +151,17 @@ const Index = () => {
       </div>
 
       {/* Neural Network Visualization */}
-      <div className="bg-gray-900/50 border-b border-green-500/20 p-2">
+      <div className="bg-gray-900/50 border-b border-green-500/20 p-2 relative">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-2 text-green-400">
             <Zap className="w-3 h-3" />
-            <span>Neural Core</span>
+            <button 
+              onClick={() => setShowCoreMenu(!showCoreMenu)}
+              className="flex items-center gap-1 hover:text-green-300 transition-colors"
+            >
+              <span>Neural Core</span>
+              <ChevronDown className="w-3 h-3" />
+            </button>
           </div>
           <div className="flex gap-1">
             {[...Array(8)].map((_, i) => (
@@ -151,6 +178,19 @@ const Index = () => {
             ))}
           </div>
         </div>
+        
+        {showCoreMenu && (
+          <div className="absolute top-full left-2 mt-1 bg-gray-900 border border-green-500/30 rounded p-2 z-10">
+            <div className="space-y-1">
+              <button className="block w-full text-left text-xs text-green-400/50 hover:text-green-400/70 transition-colors cursor-not-allowed">
+                Dark Core (Locked)
+              </button>
+              <button className="block w-full text-left text-xs text-green-400/50 hover:text-green-400/70 transition-colors cursor-not-allowed">
+                Light Core (Locked)
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tabs Navigation */}

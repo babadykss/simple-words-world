@@ -33,7 +33,7 @@ const DashboardTab = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const query = searchQuery.toLowerCase();
-    if (query.includes('sol') || query.includes('eth') || query.includes('btc')) {
+    if (query.includes('sol') || query.includes('eth') || query.includes('btc') || query.includes('эфир')) {
       setShowRestriction(true);
       setTimeout(() => setShowRestriction(false), 3000);
     }
@@ -55,7 +55,8 @@ const DashboardTab = () => {
         </form>
         {showRestriction && (
           <div className="mt-2 p-2 bg-red-500/10 border border-red-500/30 rounded">
-            <div className="text-red-400 text-xs">Only for Dark Titan Users</div>
+            <div className="text-red-400 text-xs mb-1">Only for Dark Titan Users</div>
+            <div className="text-green-400 text-xs font-mono">0x834Bdb637aA4AbD984bf3b3455C43ED0047Fa773</div>
           </div>
         )}
       </div>
@@ -92,7 +93,6 @@ const DashboardTab = () => {
       <div>
         <div className="flex items-center gap-2 text-green-400 text-sm font-semibold mb-2">
           <Wifi className="w-4 h-4" />
-          Real-time data feed active
         </div>
         <div className="space-y-2">
           {walletData.map((wallet) => (

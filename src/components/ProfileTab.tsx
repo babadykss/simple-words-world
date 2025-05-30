@@ -2,7 +2,12 @@
 import React from 'react';
 import { User, Award, Twitter, FileText, Zap, Star, Moon } from 'lucide-react';
 
-const ProfileTab = () => {
+interface ProfileTabProps {
+  userBio?: string;
+  userTwitter?: string;
+}
+
+const ProfileTab = ({ userBio, userTwitter }: ProfileTabProps) => {
   const achievements = [
     { name: 'First Transaction', date: '2024-01-15', icon: Zap },
     { name: 'Crypto Explorer', date: '2024-02-20', icon: Star },
@@ -60,7 +65,7 @@ const ProfileTab = () => {
           Twitter Account
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-green-400 text-xs">@crypto_titan_2024</span>
+          <span className="text-green-400 text-xs">{userTwitter || '@crypto_titan_2024'}</span>
           <div className="w-2 h-2 bg-green-400 rounded-full"></div>
         </div>
       </div>
@@ -72,8 +77,7 @@ const ProfileTab = () => {
           Bio
         </div>
         <div className="text-green-400/80 text-xs leading-relaxed">
-          Neural network enthusiast exploring the depths of blockchain technology. 
-          Building the future one transaction at a time. 🚀
+          {userBio || 'Neural network enthusiast exploring the depths of blockchain technology. Building the future one transaction at a time. 🚀'}
         </div>
       </div>
     </div>
