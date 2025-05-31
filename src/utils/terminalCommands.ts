@@ -2,7 +2,7 @@ import { sendToOllama } from './ollamaUtils';
 
 // Base64 encoded API data for security
 const ENCODED_API_DATA = 'aHR0cHM6Ly9hcGkucnVnY2hlY2sueHl6L3YxL3Rva2Vucy8='; // https://api.rugcheck.xyz/v1/tokens/
-const ENCODED_API_KEY = 'ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFM05EZ3hOVGN4TnpRc0ltbGtJam9pTm1VeVIzUk9PV05hVUdSeWRYQnhVamR0Y21aek5URlRSMkZ6TlRGVFIyRnRiVWczWjFGV09UVnJWblZKVUdwMVZGWWlmUS5weHZ5V1U0cTZyakhUOHNmRUNDczhrMHFCNHAzYVVJMjZTTnNNdDMwd3g0'; // API key
+const ENCODED_API_KEY = 'ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFM05EZ3hOVGN4TnpRc0ltbGtJam9pTm1VeVIzUk9PV05hVUdSeWRYQnhVamR0Y21aek5URlRSMkZ6TlRGVFIyRnRiVWczWjFGV09UVnJWblVKVUdwMVZGWWlmUS5weHZ5V1U0cTZyakhUOHNmRUNDczhrMHFCNHAzYVVJMjZTTnNNdDMwd3g0'; // API key
 
 export interface CommandResult {
   type: 'string' | 'function' | 'async';
@@ -21,6 +21,26 @@ const decodeBase64 = (encoded: string): string => {
   return atob(encoded);
 };
 
+// Function to extract essential data from token report
+const extractEssentialData = (data: any) => {
+  return {
+    token: {
+      name: data.token?.name,
+      symbol: data.token?.symbol,
+      totalSupply: data.token?.totalSupply
+    },
+    score: data.score,
+    risks: data.risks?.slice(0, 3).map((risk: any) => ({
+      name: risk.name,
+      level: risk.level
+    })),
+    markets: data.markets?.slice(0, 2).map((market: any) => ({
+      name: market.name,
+      liquidity: market.liquidity
+    }))
+  };
+};
+
 // Function to fetch token report from RugCheck API
 const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
   try {
@@ -37,25 +57,28 @@ const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`TITAN ERROR: API responded with status ${response.status}`);
     }
 
     const data = await response.json();
     
-    // Send JSON data to AI for analysis
+    // Extract only essential data
+    const essentialData = extractEssentialData(data);
+    
+    // Send minimal JSON data to AI for analysis
     const aiPrompt = `Проанализируй этот токен отчет и дай краткий анализ с плюсами и минусами, название токена и общую оценку безопасности. Отвечай на русском языке, кратко и по делу:
 
-${JSON.stringify(data, null, 2)}`;
+${JSON.stringify(essentialData, null, 2)}`;
 
     const aiAnalysis = await sendToOllama(aiPrompt);
     
-    return `📊 Token Analysis for ${tokenAddress}
+    return `📊 TITAN Token Analysis for ${tokenAddress}
 ═══════════════════════════════════════
 ${aiAnalysis}`;
     
   } catch (error) {
-    console.error('Error fetching token report:', error);
-    return `❌ Error scanning token: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    console.error('TITAN scan error:', error);
+    return `❌ TITAN ERROR: Token scan failed - ${error instanceof Error ? error.message : 'Unknown error'}`;
   }
 };
 
@@ -100,11 +123,11 @@ export const createCommands = (
         const tokenAddress = args.trim();
         
         if (!tokenAddress) {
-          return 'Usage: scan <token_address>\nExample: scan 6MQpbiTC2YcogidTmKqMLK82qvE9z5QEm7EP3AEDpump';
+          return 'Usage: scan <token_address>';
         }
         
         if (!isValidSolTokenAddress(tokenAddress)) {
-          return 'upgrade to dark to use more';
+          return '🔐 TITAN SECURITY: Upgrade to DARK mode to use more features';
         }
         
         return await fetchTokenReport(tokenAddress);
@@ -160,7 +183,7 @@ export const executeCommand = async (
   console.log('Executing command:', command, 'with args:', args);
   const cmd = commands[command];
   if (!cmd) {
-    return `Command not found: ${command}`;
+    return `TITAN ERROR: Command not found: ${command}`;
   }
 
   if (cmd.type === 'string') {
