@@ -1,9 +1,8 @@
-
 import { sendToOllama } from './ollamaUtils';
 
 // Base64 encoded API data for security
 const ENCODED_API_DATA = 'aHR0cHM6Ly9hcGkucnVnY2hlY2sueHl6L3YxL3Rva2Vucy8='; // https://api.rugcheck.xyz/v1/tokens/
-const ENCODED_API_KEY = 'ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFM05EZ3hOVGN4TnpRc0ltbGtJam9pTm1VeVIzUk9PV05hVUdSeWRYQnhVamR0Y21aek5URlRSMkZ6TlRGVFIyRnRiVWczWjFGV09UVnJWblZLVUdwMVZGWWlmUS5weHZ5V1U0cTZyakhUOHNmRUNDczhrMHFCNHAzYVVJMjZTTnNNdDMwd3g0'; // API key
+const ENCODED_API_KEY = 'ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFM05EZ3hOVGN4TnpRc0ltbGtJam9pTm1VeVIzUk9PV05hVUdSeWRYQnhVamR0Y21aek5URlRSMkZ6TlRGVFIyRnRiVWczWjFGV09UVnJWblZKVUdwMVZGWWlmUS5weHZ5V1U0cTZyakhUOHNmRUNDczhrMHFCNHAzYVVJMjZTTnNNdDMwd3g0'; // API key
 
 export interface CommandResult {
   type: 'string' | 'function' | 'async';
@@ -43,36 +42,16 @@ const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
 
     const data = await response.json();
     
-    // Format the response for terminal display
-    let result = `📊 Token Scan Report for ${tokenAddress}\n`;
-    result += `═══════════════════════════════════════\n`;
+    // Send JSON data to AI for analysis
+    const aiPrompt = `Проанализируй этот токен отчет и дай краткий анализ с плюсами и минусами, название токена и общую оценку безопасности. Отвечай на русском языке, кратко и по делу:
+
+${JSON.stringify(data, null, 2)}`;
+
+    const aiAnalysis = await sendToOllama(aiPrompt);
     
-    if (data.score !== undefined) {
-      result += `🔍 Risk Score: ${data.score}/100\n`;
-    }
-    
-    if (data.risks && Array.isArray(data.risks)) {
-      result += `⚠️  Risks Found: ${data.risks.length}\n`;
-      data.risks.forEach((risk: any, index: number) => {
-        result += `  ${index + 1}. ${risk.name}: ${risk.description}\n`;
-      });
-    }
-    
-    if (data.markets && Array.isArray(data.markets)) {
-      result += `💰 Markets: ${data.markets.length} found\n`;
-      data.markets.slice(0, 3).forEach((market: any) => {
-        result += `  • ${market.name}: $${market.liquidity?.toLocaleString() || 'N/A'}\n`;
-      });
-    }
-    
-    if (data.token) {
-      result += `📝 Token Info:\n`;
-      result += `  Name: ${data.token.name || 'Unknown'}\n`;
-      result += `  Symbol: ${data.token.symbol || 'Unknown'}\n`;
-      result += `  Supply: ${data.token.totalSupply ? Number(data.token.totalSupply).toLocaleString() : 'Unknown'}\n`;
-    }
-    
-    return result;
+    return `📊 Token Analysis for ${tokenAddress}
+═══════════════════════════════════════
+${aiAnalysis}`;
     
   } catch (error) {
     console.error('Error fetching token report:', error);
