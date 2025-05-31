@@ -52,11 +52,8 @@ Focus only on the most critical security risks and overall safety assessment.`;
     const aiAnalysis = await sendToOllama(aiPrompt);
     
     return `[SCAN] ${data.token?.symbol || 'Unknown Token'} Security Analysis
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-${aiAnalysis}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+${aiAnalysis}`;
     
   } catch (error) {
     console.error('TITAN scan error:', error);
