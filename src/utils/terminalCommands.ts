@@ -21,26 +21,6 @@ const decodeBase64 = (encoded: string): string => {
   return atob(encoded);
 };
 
-// Function to extract essential data from token report
-const extractEssentialData = (data: any) => {
-  return {
-    token: {
-      name: data.token?.name,
-      symbol: data.token?.symbol,
-      totalSupply: data.token?.totalSupply
-    },
-    score: data.score,
-    risks: data.risks?.slice(0, 3).map((risk: any) => ({
-      name: risk.name,
-      level: risk.level
-    })),
-    markets: data.markets?.slice(0, 2).map((market: any) => ({
-      name: market.name,
-      liquidity: market.liquidity
-    }))
-  };
-};
-
 // Function to fetch token report from RugCheck API
 const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
   try {
@@ -62,29 +42,19 @@ const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
 
     const data = await response.json();
     
-    // Extract only essential data
-    const essentialData = extractEssentialData(data);
+    // Send data to AI for analysis
+    const aiPrompt = `Analyze this token security data and provide a very short summary (max 2-3 sentences) focusing on main risks:
+
+${JSON.stringify(data, null, 2)}
+
+Focus only on the most critical security risks and overall safety assessment.`;
+
+    const aiAnalysis = await sendToOllama(aiPrompt);
     
-    return `[SCAN] TITAN Security Analysis
+    return `[SCAN] ${data.token?.symbol || 'Unknown Token'} Security Analysis
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Symbol: ${essentialData.token.symbol || 'Unknown'}
-Score:  ${essentialData.score || 'N/A'}
-
-Risks Detected:
-${essentialData.risks?.map((risk: any) => {
-  const level = risk.level.toLowerCase();
-  if (level === 'danger') {
-    return `[DANGER] ${risk.name}`;
-  } else if (level === 'warn') {
-    return `[WARN] ${risk.name}`;
-  } else {
-    return `[INFO] ${risk.name}`;
-  }
-}).join('\n') || 'No risks detected'}
-
-Markets:
-${essentialData.markets?.map((market: any) => `${market.name}: ${market.liquidity || 'N/A'}`).join('\n') || 'No market data'}
+${aiAnalysis}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
     
