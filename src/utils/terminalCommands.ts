@@ -1,4 +1,3 @@
-
 import { sendToOllama } from './ollamaUtils';
 
 // Base64 encoded API data for security
@@ -66,23 +65,32 @@ const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
     // Extract only essential data
     const essentialData = extractEssentialData(data);
     
-    return `⚡ TITAN SECURITY SCAN
+    return `[SCAN] TITAN Security Analysis
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Token:** ${essentialData.token.symbol || 'Unknown'}
-**Score:** ${essentialData.score || 'N/A'}
+Symbol: ${essentialData.token.symbol || 'Unknown'}
+Score:  ${essentialData.score || 'N/A'}
 
-**Risks:**
-${essentialData.risks?.map((risk: any) => `• ${risk.name} (${risk.level})`).join('\n') || 'No risks detected'}
+Risks Detected:
+${essentialData.risks?.map((risk: any) => {
+  const level = risk.level.toLowerCase();
+  if (level === 'danger') {
+    return `[DANGER] ${risk.name}`;
+  } else if (level === 'warn') {
+    return `[WARN] ${risk.name}`;
+  } else {
+    return `[INFO] ${risk.name}`;
+  }
+}).join('\n') || 'No risks detected'}
 
-**Markets:**
-${essentialData.markets?.map((market: any) => `• ${market.name}: ${market.liquidity || 'N/A'}`).join('\n') || 'No market data'}
+Markets:
+${essentialData.markets?.map((market: any) => `${market.name}: ${market.liquidity || 'N/A'}`).join('\n') || 'No market data'}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
     
   } catch (error) {
     console.error('TITAN scan error:', error);
-    return `❌ TITAN ERROR: Token scan failed - ${error instanceof Error ? error.message : 'Unknown error'}`;
+    return `[ERROR] TITAN: Token scan failed - ${error instanceof Error ? error.message : 'Unknown error'}`;
   }
 };
 

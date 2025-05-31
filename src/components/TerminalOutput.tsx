@@ -1,4 +1,5 @@
 
+
 import React, { useRef, useEffect } from 'react';
 
 interface TerminalOutputProps {
@@ -14,15 +15,6 @@ const TerminalOutput = ({ history, isProcessing }: TerminalOutputProps) => {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   }, [history]);
-
-  const formatText = (text: string) => {
-    // Handle **bold** text
-    let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-green-300">$1</span>');
-    // Handle *italic* text
-    formattedText = formattedText.replace(/\*(.*?)\*/g, '<span class="italic text-green-200">$1</span>');
-    
-    return formattedText;
-  };
 
   const formatLine = (line: string, index: number) => {
     if (line.includes('Welcome') && line.includes('to Titan Terminal v1.0.0')) {
@@ -44,23 +36,42 @@ const TerminalOutput = ({ history, isProcessing }: TerminalOutputProps) => {
     }
     
     // Check if line contains TITAN SECURITY SCAN header
-    if (line.includes('⚡ TITAN SECURITY SCAN')) {
+    if (line.includes('[SCAN] TITAN Security Analysis')) {
       return (
         <div key={index} className="mb-2">
-          <span className="text-cyan-400 font-bold text-sm">{line}</span>
+          <span className="text-green-400 font-bold text-sm">🛡️ {line}</span>
+        </div>
+      );
+    }
+
+    // Color coding for risk levels
+    if (line.includes('[DANGER]')) {
+      return (
+        <div key={index} className="mb-1">
+          <span className="text-red-400">⚠️ {line.replace('[DANGER]', 'DANGER:')}</span>
+        </div>
+      );
+    }
+
+    if (line.includes('[WARN]')) {
+      return (
+        <div key={index} className="mb-1">
+          <span className="text-yellow-400">⚠️ {line.replace('[WARN]', 'WARN:')}</span>
+        </div>
+      );
+    }
+
+    if (line.includes('[ERROR]')) {
+      return (
+        <div key={index} className="mb-1">
+          <span className="text-red-400">❌ {line.replace('[ERROR]', 'ERROR:')}</span>
         </div>
       );
     }
     
-    // Format other lines with markdown support
-    const formattedText = formatText(line);
-    
     return (
       <div key={index} className="mb-1">
-        <span 
-          className="text-green-400/80 leading-relaxed" 
-          dangerouslySetInnerHTML={{ __html: formattedText }}
-        />
+        <span className="text-green-400/80 leading-relaxed">{line}</span>
       </div>
     );
   };
@@ -110,3 +121,4 @@ const TerminalOutput = ({ history, isProcessing }: TerminalOutputProps) => {
 };
 
 export default TerminalOutput;
+
