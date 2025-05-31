@@ -15,6 +15,15 @@ const TerminalOutput = ({ history, isProcessing }: TerminalOutputProps) => {
     }
   }, [history]);
 
+  const formatText = (text: string) => {
+    // Handle **bold** text
+    let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-green-300">$1</span>');
+    // Handle *italic* text
+    formattedText = formattedText.replace(/\*(.*?)\*/g, '<span class="italic text-green-200">$1</span>');
+    
+    return formattedText;
+  };
+
   const formatLine = (line: string, index: number) => {
     if (line.includes('Welcome') && line.includes('to Titan Terminal v1.0.0')) {
       return (
@@ -34,9 +43,24 @@ const TerminalOutput = ({ history, isProcessing }: TerminalOutputProps) => {
       );
     }
     
+    // Check if line contains TITAN SECURITY SCAN header
+    if (line.includes('⚡ TITAN SECURITY SCAN')) {
+      return (
+        <div key={index} className="mb-2">
+          <span className="text-cyan-400 font-bold text-sm">{line}</span>
+        </div>
+      );
+    }
+    
+    // Format other lines with markdown support
+    const formattedText = formatText(line);
+    
     return (
       <div key={index} className="mb-1">
-        <span className="text-green-400/80">{line}</span>
+        <span 
+          className="text-green-400/80 leading-relaxed" 
+          dangerouslySetInnerHTML={{ __html: formattedText }}
+        />
       </div>
     );
   };
