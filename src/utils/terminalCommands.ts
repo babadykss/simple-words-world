@@ -21,6 +21,32 @@ const decodeBase64 = (encoded: string): string => {
   return atob(encoded);
 };
 
+// Function to extract key security data from the full JSON response
+const extractSecurityData = (data: any) => {
+  return {
+    token: {
+      symbol: data.token?.symbol || data.fileMeta?.symbol || 'Unknown',
+      name: data.fileMeta?.name || 'Unknown'
+    },
+    score: data.score,
+    score_normalised: data.score_normalised,
+    rugged: data.rugged,
+    risks: data.risks || [],
+    mintAuthority: data.mintAuthority,
+    freezeAuthority: data.freezeAuthority,
+    transferFee: data.transferFee,
+    topHolders: data.topHolders?.slice(0, 5) || [], // Only top 5 holders
+    insiderNetworks: data.insiderNetworks || [],
+    graphInsidersDetected: data.graphInsidersDetected,
+    markets: data.markets?.map(market => ({
+      lpLocked: market.lp?.lpLocked,
+      lpLockedPct: market.lp?.lpLockedPct,
+      lpLockedUSD: market.lp?.lpLockedUSD
+    })) || [],
+    verification: data.verification
+  };
+};
+
 // Function to fetch token report from RugCheck API
 const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
   try {
@@ -42,16 +68,19 @@ const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
 
     const data = await response.json();
     
-    // Send data to AI for analysis
+    // Extract only important security data
+    const securityData = extractSecurityData(data);
+    
+    // Send only key data to AI for analysis
     const aiPrompt = `Analyze this token security data and provide a very short summary (max 2-3 sentences) focusing on main risks:
 
-${JSON.stringify(data, null, 2)}
+${JSON.stringify(securityData, null, 2)}
 
 Focus only on the most critical security risks and overall safety assessment.`;
 
     const aiAnalysis = await sendToOllama(aiPrompt);
     
-    return `[SCAN] ${data.token?.symbol || 'Unknown Token'} Security Analysis
+    return `[SCAN] ${securityData.token.symbol} Security Analysis
 
 ${aiAnalysis}`;
     
