@@ -1,4 +1,3 @@
-
 import { sendToOllama } from './ollamaUtils';
 
 // Base64 encoded API data for security
@@ -67,15 +66,18 @@ const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
     const essentialData = extractEssentialData(data);
     
     // Send minimal JSON data to AI for analysis in English
-    const aiPrompt = `Analyze this token report and provide a brief analysis with pros and cons, token name and overall security assessment. Respond in English, briefly and to the point:
+    const aiPrompt = `Analyze this token report and provide a brief analysis with pros and cons and overall security assessment. DO NOT include token name. Keep it concise and well-structured:
 
 ${JSON.stringify(essentialData, null, 2)}`;
 
     const aiAnalysis = await sendToOllama(aiPrompt);
     
-    return `🔍 TITAN Security Analysis
-═══════════════════════════════════════
-${aiAnalysis}`;
+    return `⚡ TITAN SECURITY SCAN
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+
+${aiAnalysis}
+
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓`;
     
   } catch (error) {
     console.error('TITAN scan error:', error);
