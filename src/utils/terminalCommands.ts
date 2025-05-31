@@ -1,8 +1,9 @@
+
 import { sendToOllama } from './ollamaUtils';
 
 // Base64 encoded API data for security
 const ENCODED_API_DATA = 'aHR0cHM6Ly9hcGkucnVnY2hlY2sueHl6L3YxL3Rva2Vucy8='; // https://api.rugcheck.xyz/v1/tokens/
-const ENCODED_API_KEY = 'ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFM05EZ3hOVGN4TnpRc0ltbGtJam9pTm1VeVIzUk9PV05hVUdSeWRYQnhVamR0Y21aek5URlRSMkZ6TlRGVFIyRnRiVWczWjFGV09UVnJWblVKVUdwMVZGWWlmUS5weHZ5V1U0cTZyakhUOHNmRUNDczhrMHFCNHAzYVVJMjZTTnNNdDMwd3g0'; // API key
+const ENCODED_API_KEY = 'ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlU0FpT2pFM05EZ3hOVGN4TnpRc0ltbGtJam9pTm1VeVIzUk9PV05hVUdSeWRYQnhVamR0Y21aek5URlRSMkZ6TlRGVFIyRnRiVWczWjFGV09UVnJWblVKVUdwMVZGWWlmUS5weHZ5V1U0cTZyakhUOHNmRUNDczhrMHFCNHAzYVVJMjZTTnNNdDMwd3g0'; // API key
 
 export interface CommandResult {
   type: 'string' | 'function' | 'async';
@@ -65,17 +66,17 @@ const fetchTokenReport = async (tokenAddress: string): Promise<string> => {
     // Extract only essential data
     const essentialData = extractEssentialData(data);
     
-    // Send minimal JSON data to AI for analysis in English
-    const aiPrompt = `Analyze this token report and provide a brief analysis with pros and cons and overall security assessment. DO NOT include token name. Keep it concise and well-structured:
-
-${JSON.stringify(essentialData, null, 2)}`;
-
-    const aiAnalysis = await sendToOllama(aiPrompt);
-    
     return `⚡ TITAN SECURITY SCAN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-${aiAnalysis}
+**Token:** ${essentialData.token.symbol || 'Unknown'}
+**Score:** ${essentialData.score || 'N/A'}
+
+**Risks:**
+${essentialData.risks?.map((risk: any) => `• ${risk.name} (${risk.level})`).join('\n') || 'No risks detected'}
+
+**Markets:**
+${essentialData.markets?.map((market: any) => `• ${market.name}: ${market.liquidity || 'N/A'}`).join('\n') || 'No market data'}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
     
